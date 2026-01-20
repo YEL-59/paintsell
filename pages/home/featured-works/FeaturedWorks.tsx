@@ -18,7 +18,7 @@ const FeaturedWorks = () => {
               A curated selector of our most celebrated original paintings
             </p>
             <Link
-              href="/works"
+              href="/products"
               className="group flex items-center gap-3 text-sm md:text-base font-lato tracking-[0.2em] text-[#141414] transition-colors"
             >
               VIEW ALL WORKS
