@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import WorkCard from "@/components/mainLayout/WorkCard";
-import { allProducts } from "@/constants/products";
-
+import { IProduct, artworkProducts } from "@/constants/products";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -50,11 +49,11 @@ const AllProducts = () => {
   ];
 
   // Search and Sort Logic
-  const filteredProducts = allProducts
-    .filter((product) =>
+  const filteredProducts = artworkProducts
+    .filter((product: IProduct) =>
       product.title.toLowerCase().includes(searchQuery.toLowerCase()),
     )
-    .sort((a, b) => {
+    .sort((a: IProduct, b: IProduct) => {
       if (activeSort === "Newest Artist") {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       }
@@ -152,7 +151,7 @@ const AllProducts = () => {
         {paginatedProducts.length > 0 ? (
           <>
             <div className="grid grid-cols-2 lg:grid-cols-3 lg:gap-x-8 gap-x-4 lg:gap-y-12 gap-y-6">
-              {paginatedProducts.map((product, index) => (
+              {paginatedProducts.map((product: IProduct, index: number) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
