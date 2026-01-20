@@ -1,10 +1,11 @@
- 
+import Banner from "@/pages/home/banner/Banner";
+
 const HomePage = () => {
-    return (
-        <div>
-            <h2>This is HomePage</h2>
-        </div>
-    );
+  return (
+    <div>
+      <Banner />
+    </div>
+  );
 };
 
 export default HomePage;
