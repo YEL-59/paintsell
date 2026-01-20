@@ -119,7 +119,7 @@ const InstagramSection = () => {
           {instagramPosts.map((post) => (
             <div key={post.id} className="group cursor-pointer space-y-4">
               {/* Thumbnail Container */}
-              <div className="relative aspect-square overflow-hidden bg-gray-100 h-[476px] w-full">
+              <div className="relative aspect-square overflow-hidden bg-gray-100 2xl:h-[476px] xl:h-[400px] lg:h-[350px] md:h-[300px] h-[250px] w-full">
                 <Image
                   src={post.image}
                   alt={post.title}
