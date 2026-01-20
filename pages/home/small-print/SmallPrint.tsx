@@ -56,8 +56,8 @@ const SmallPrint = () => {
 
         {/* Grid Section */}
         <div className="grid grid-cols-2 lg:grid-cols-4 lg:gap-x-8 gap-x-4 lg:gap-y-16 gap-y-10">
-          {smallPrints.map((work) => (
-            <div className="group cursor-pointer">
+          {smallPrints.map((work, index) => (
+            <div key={index} className="group cursor-pointer">
               {/* Image Container */}
               <div className="relative aspect-square overflow-hidden mb-5 border-14 border-white bg-[#F9F9F9] lg:h-[430px] md:h-[280px] h-[200px] w-full">
                 <Image
