@@ -58,7 +58,7 @@ const Navbar = () => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="fixed top-0 z-50 w-full px-4 py-6 sm:px-6 lg:px-8"
+      className="fixed top-0 z-50 w-full px-4 py-6 sm:px-5 lg:px-8"
     >
       <div className="mx-auto container">
         <div className="flex items-center justify-between rounded-[73px] bg-black/20 px-8 py-5 backdrop-blur-sm ring-1 ring-white/10">
@@ -76,26 +76,78 @@ const Navbar = () => {
           <div className="hidden items-center space-x-8 font-lato lg:flex">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
+              const dropdownItems =
+                link.name === "Prints"
+                  ? [
+                      { name: "Small Print", href: "/prints/small" },
+                      {
+                        name: "Limited addition print",
+                        href: "/prints/limited",
+                      },
+                    ]
+                  : [];
+
               return (
-                <div key={link.name} className="relative">
+                <div
+                  key={link.name}
+                  className="relative group"
+                  onMouseEnter={() => link.hasDropdown && setIsPrintsOpen(true)}
+                  onMouseLeave={() =>
+                    link.hasDropdown && setIsPrintsOpen(false)
+                  }
+                >
                   {link.hasDropdown ? (
-                    <button
-                      onMouseEnter={() => setIsPrintsOpen(true)}
-                      onMouseLeave={() => setIsPrintsOpen(false)}
-                      className={cn(
-                        "group flex items-center space-x-1 text-sm lg:text-lg tracking-wide transition-all duration-300 text-white hover:text-white",
-                        isActive ? " font-semibold" : "",
-                      )}
-                    >
-                      <span>{link.name}</span>
-                      <ChevronDown className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" />
-                      {isActive && (
-                        <motion.div
-                          layoutId="activeNav"
-                          className="absolute -bottom-1 left-0 h-px w-full bg-white"
+                    <div className="relative">
+                      <button
+                        className={cn(
+                          "flex items-center space-x-1 text-sm lg:text-lg tracking-wide transition-all duration-300 text-white hover:text-white",
+                          isActive ? " font-semibold" : "",
+                        )}
+                      >
+                        <span>{link.name}</span>
+                        <ChevronDown
+                          className={cn(
+                            "h-4 w-4 transition-transform duration-300",
+                            isPrintsOpen ? "rotate-180" : "",
+                          )}
                         />
-                      )}
-                    </button>
+                        {isActive && (
+                          <motion.div
+                            layoutId="activeNav"
+                            className="absolute -bottom-1 left-0 h-px w-full bg-white"
+                          />
+                        )}
+                      </button>
+
+                      {/* Dropdown Menu */}
+                      <AnimatePresence>
+                        {isPrintsOpen && (
+                          <>
+                            {/* Hover Bridge */}
+                            <div className="absolute top-full left-0 h-4 w-full" />
+                            <motion.div
+                              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                              transition={{ duration: 0.2, ease: "easeOut" }}
+                              className="absolute left-1/2 top-[calc(100%+8px)] w-64 -translate-x-1/2 overflow-hidden rounded-2xl bg-black/40 p-1.5 backdrop-blur-md ring-1 ring-white/10 shadow-2xl"
+                            >
+                              <div className="flex flex-col space-y-1">
+                                {dropdownItems.map((item) => (
+                                  <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className="rounded-xl px-4 py-3 text-[15px] font-light tracking-wide text-white/80 transition-all duration-300 hover:bg-white/10 hover:text-white"
+                                  >
+                                    {item.name}
+                                  </Link>
+                                ))}
+                              </div>
+                            </motion.div>
+                          </>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   ) : (
                     <Link
                       href={link.href}
@@ -177,20 +229,73 @@ const Navbar = () => {
             <div className="overflow-hidden rounded-3xl bg-black/40 px-4 pb-4 pt-2 backdrop-blur-md ring-1 ring-white/10">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
+                const dropdownItems =
+                  link.name === "Prints"
+                    ? [
+                        { name: "Small Print", href: "/prints/small" },
+                        {
+                          name: "Limited addition print",
+                          href: "/prints/limited",
+                        },
+                      ]
+                    : [];
+
                 return (
                   <motion.div variants={itemVariants} key={link.name}>
-                    <Link
-                      href={link.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={cn(
-                        "block rounded-xl px-4 py-3 text-base font-light tracking-wide transition-all duration-300 hover:bg-white/10 hover:text-white",
-                        isActive
-                          ? "bg-white/10 text-white"
-                          : "text-white shadow-none",
-                      )}
-                    >
-                      {link.name}
-                    </Link>
+                    {link.hasDropdown ? (
+                      <div className="flex flex-col">
+                        <button
+                          onClick={() => setIsPrintsOpen(!isPrintsOpen)}
+                          className={cn(
+                            "flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-light tracking-wide transition-all duration-300 hover:bg-white/10 hover:text-white",
+                            isActive ? "bg-white/10 text-white" : "text-white",
+                          )}
+                        >
+                          <span>{link.name}</span>
+                          <ChevronDown
+                            className={cn(
+                              "h-4 w-4 transition-transform duration-300",
+                              isPrintsOpen ? "rotate-180" : "",
+                            )}
+                          />
+                        </button>
+                        <AnimatePresence>
+                          {isPrintsOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden bg-white/5 mx-2 my-1 rounded-xl"
+                            >
+                              {dropdownItems.map((item) => (
+                                <Link
+                                  key={item.name}
+                                  href={item.href}
+                                  onClick={() => setIsMobileMenuOpen(false)}
+                                  className="block rounded-xl px-4 py-3 text-[14px] font-light tracking-wide text-white/70 transition-all duration-300 hover:text-white"
+                                >
+                                  {item.name}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={cn(
+                          "block rounded-xl px-4 py-3 text-base font-light tracking-wide transition-all duration-300 hover:bg-white/10 hover:text-white",
+                          isActive
+                            ? "bg-white/10 text-white"
+                            : "text-white shadow-none",
+                        )}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </motion.div>
                 );
               })}
