@@ -5,7 +5,7 @@ import ArtistBG from "@/assets/images/meet-the-artist-banner.png";
 import ArtistImg from "@/assets/images/meet-the-artist-img.png";
 import { motion } from "framer-motion";
 
-const MeetArtist = () => {
+const MeetArtist = ({title, description, button}: {title: string, description: string, button: string}) => {
   return (
     <section className="relative overflow-hidden py-30 bg-white">
       {/* Background Image */}
@@ -48,19 +48,16 @@ const MeetArtist = () => {
           >
             <div className="space-y-4">
               <h2 className="text-5xl font-serif font-semibold tracking-tight text-[#141414] lg:text-6xl">
-                Meet The Artist
+                {title}
               </h2>
               <p className="max-w-xl text-base md:text-lg leading-relaxed font-medium text-[#404040] font-lato">
-                Meet the artist behind the creations. With a passion for
-                storytelling through art, each piece reflects creativity,
-                emotion, and refined craftsmanship. Discover the vision that
-                brings every artwork to life.
+                {description}
               </p>
             </div>
 
             <button className="group relative overflow-hidden bg-[#0C2E46] px-10 py-4 text-sm md:text-base cursor-pointer tracking-[0.2em] text-white transition-all duration-300 hover:bg-[#081F30] active:scale-95">
               <span className="relative z-10 transition-colors group-hover:text-white">
-                LEARN MORE
+                {button}
               </span>
               <div className="absolute inset-0 -translate-x-full bg-white/10 transition-transform duration-300 group-hover:translate-x-0" />
             </button>
