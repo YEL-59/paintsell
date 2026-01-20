@@ -1,12 +1,7 @@
+import { IProduct } from "@/constants/products";
 import Image from "next/image";
-interface IWork {
-  id: number;
-  image: string;
-  title: string;
-  price: string;
-}
 
-const WorkCard = ({ work }: { work: IWork }) => {
+const WorkCard = ({ work }: { work: IProduct }) => {
   return (
     <div className="group cursor-pointer">
       {/* Image Container */}
@@ -25,7 +20,7 @@ const WorkCard = ({ work }: { work: IWork }) => {
           {work.title}
         </h3>
         <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
-          {work.price}
+          ${work.price.toLocaleString()}
         </p>
       </div>
     </div>

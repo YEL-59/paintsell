@@ -81,8 +81,8 @@ const Footer = () => {
 
           {/* Navigation Columns */}
           <div className="lg:col-span-4 grid grid-cols-2 gap-x-8 gap-y-4 lg:px-10">
-            {footerNav.map((item) => (
-                <div className="flex flex-col gap-4">
+            {footerNav.map((item, index) => (
+                <div key={index} className="flex flex-col gap-4">
               <Link
                 href={item.href}
                 className="font-lato text-base lg:text-lg hover:text-[#f3c265] transition-colors"
