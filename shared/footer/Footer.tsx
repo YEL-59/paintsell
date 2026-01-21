@@ -8,52 +8,52 @@ import {
 } from "@/components/svg/MainLayoutSvg";
 
 const Footer = () => {
-    const footerNav = [
-        {
-            title: "Home",
-            href: "/"
-        },
-        {
-            title: "Search",
-            href: "/search"
-        },
-        {
-            title: "All Products",
-            href: "/products"
-        },
-        {
-            title: "Original Works",
-            href: "/original-works"
-        },
-        {
-            title: "Event",
-            href: "/event"
-        },
-        {
-            title: "Print",
-            href: "/print"
-        },
-        {
-            title: "About Us",
-            href: "/about"
-        },
-        {
-            title: "Contact Us",
-            href: "/contact"
-        },
-        {
-            title: "Privacy Policy",
-            href: "/privacy"
-        },
-        {
-            title: "Terms Of Service",
-            href: "/terms"
-        },
-        {
-            title: "FAQ",
-            href: "/faq"
-        },
-    ]
+  const footerNav = [
+    {
+      title: "Home",
+      href: "/",
+    },
+    {
+      title: "Search",
+      href: "/search",
+    },
+    {
+      title: "All Products",
+      href: "/products",
+    },
+    {
+      title: "Original Works",
+      href: "/original-works",
+    },
+    {
+      title: "Event",
+      href: "/events",
+    },
+    {
+      title: "Print",
+      href: "/prints",
+    },
+    {
+      title: "About Us",
+      href: "/about",
+    },
+    {
+      title: "Contact Us",
+      href: "/contact",
+    },
+    {
+      title: "Privacy Policy",
+      href: "/privacy",
+    },
+    {
+      title: "Terms Of Service",
+      href: "/terms",
+    },
+    {
+      title: "FAQ",
+      href: "/faq",
+    },
+  ];
   return (
     <footer className="relative w-full overflow-hidden text-white pt-50 pb-10">
       {/* Background Image */}
@@ -82,14 +82,14 @@ const Footer = () => {
           {/* Navigation Columns */}
           <div className="lg:col-span-4 grid grid-cols-2 gap-x-8 gap-y-4 lg:px-10">
             {footerNav.map((item, index) => (
-                <div key={index} className="flex flex-col gap-4">
-              <Link
-                href={item.href}
-                className="font-lato text-base lg:text-lg hover:text-[#f3c265] transition-colors"
-              >
-                {item.title}
-              </Link>
-            </div>
+              <div key={index} className="flex flex-col gap-4">
+                <Link
+                  href={item.href}
+                  className="font-lato text-base lg:text-lg hover:text-[#f3c265] transition-colors"
+                >
+                  {item.title}
+                </Link>
+              </div>
             ))}
           </div>
 

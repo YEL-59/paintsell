@@ -1,9 +1,10 @@
-import { IProduct } from "@/constants/products";
+import { IProduct, IOriginalWorkProduct } from "@/constants/products";
 import Image from "next/image";
+import Link from "next/link";
 
-const WorkCard = ({ work }: { work: IProduct }) => {
+const WorkCard = ({ work }: { work: IProduct | IOriginalWorkProduct }) => {
   return (
-    <div className="group cursor-pointer">
+    <Link href={`/products/${work.id}`} className="group cursor-pointer block">
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden mb-5 bg-[#F9F9F9] lg:h-[460px] md:h-[300px] h-[200px] w-full">
         <Image
@@ -23,7 +24,7 @@ const WorkCard = ({ work }: { work: IProduct }) => {
           ${work.price.toLocaleString()}
         </p>
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -4,24 +4,46 @@ export interface IProduct {
   price: number;
   image: string;
   date: string;
+  quantity: number;
+  description: string;
+  stockStatus: "In Stock" | "Out of Stock";
+  thumbnails: string[];
+  options: string[];
 }
 export interface IOriginalWorkProduct {
   id: number;
   title: string;
   price: number;
   image: string;
+  quantity: number;
   date: string;
-  description: string
+  description: string;
+  stockStatus: "In Stock" | "Out of Stock";
+  thumbnails: string[];
 }
+
+const commonThumbnails = [
+  "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=2090&auto=format&fit=crop",
+  "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
+  "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=2070&auto=format&fit=crop",
+];
+
+const commonOptions = ["Framed", "Wrapped Canvas", "Poster Print"];
 
 export const artworkProducts: IProduct[] = [
   {
     id: 1,
-    title: "Verdant Whispers",
-    price: 2400,
+    title: "Make Us One Within You",
+    price: 1600,
     image:
       "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=2070&auto=format&fit=crop",
     date: "2024-01-01",
+    description: "Elevate your space with this exquisite fine art print, capturing the soulful intensity of a violinist lost in her melody. This piece blends abstract expressionism with classical elegance.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 10,
   },
   {
     id: 2,
@@ -30,6 +52,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=2090&auto=format&fit=crop",
     date: "2023-12-15",
+    description: "A serene abstraction of coastal vibes, perfect for creating a calming atmosphere in any living space.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 5,
   },
   {
     id: 3,
@@ -38,6 +65,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
     date: "2024-01-10",
+    description: "Vibrant golden hues meet delicate organic forms in this captivating piece that celebrates life and light.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 8,
   },
   {
     id: 4,
@@ -46,6 +78,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop",
     date: "2023-11-20",
+    description: "A bold exploration of color and passion, Crimson Dreams is a statement piece for the modern collector.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 12,
   },
   {
     id: 5,
@@ -54,6 +91,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=2070&auto=format&fit=crop",
     date: "2024-01-05",
+    description: "The mystery of the night captured in floral form. Vibrant colors pop against a deep, dark background.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 4,
   },
   {
     id: 6,
@@ -62,6 +104,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://i.etsystatic.com/15649312/c/1904/1904/47/0/il/7c6aad/5255873664/il_800x800.5255873664_h55w.jpg",
     date: "2023-10-15",
+    description: "Earthy tones and organic textures combine to bring a touch of the outdoors into your interior.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 15,
   },
   {
     id: 7,
@@ -70,6 +117,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
     date: "2022-02-15",
+    description: "Soft greens and ethereal light create a sense of peace and renewal in this masterful work.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 20,
   },
   {
     id: 8,
@@ -78,6 +130,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1976&auto=format&fit=crop",
     date: "2022-12-15",
+    description: "A different take on the Verdant Whispers theme, focusing on the intricate details of forest life.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 3,
   },
   {
     id: 9,
@@ -86,6 +143,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop",
     date: "2024-12-15",
+    description: "A large-scale exploration of botanical beauty, perfect for a grand hallway or living room.",
+    stockStatus: "Out of Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 0,
   },
   {
     id: 10,
@@ -94,6 +156,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=2080&auto=format&fit=crop",
     date: "2023-12-15",
+    description: "Journey through the stars with this imaginative piece that blends cosmic elements with abstract shapes.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 7,
   },
   {
     id: 11,
@@ -102,6 +169,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=2070&auto=format&fit=crop",
     date: "2023-11-10",
+    description: "The steady pulse of the ocean waves captured in flowing lines and cool blue gradients.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 9,
   },
   {
     id: 12,
@@ -110,6 +182,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1574169208507-84376144848b?q=80&w=2079&auto=format&fit=crop",
     date: "2023-12-15",
+    description: "A soft, radiant piece that seems to emit its own light, bringing warmth to any corner.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 11,
   },
   {
     id: 13,
@@ -118,6 +195,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=1974&auto=format&fit=crop",
     date: "2024-01-20",
+    description: "The moon reflected in a still pool, a study in silver, black, and deep indigo.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 6,
   },
   {
     id: 14,
@@ -126,6 +208,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop",
     date: "2023-09-05",
+    description: "Brilliant oranges and yellows collide in an explosion of energy and warmth.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 14,
   },
   {
     id: 15,
@@ -134,6 +221,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
     date: "2024-02-14",
+    description: "Deep textures and rich colors provide a tactile feel to this dreamlike abstract vision.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 18,
   },
   {
     id: 16,
@@ -142,6 +234,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop",
     date: "2023-05-30",
+    description: "The rugged peaks of the mountains standing tall against an ever-changing sky.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 2,
   },
   {
     id: 17,
@@ -150,6 +247,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
     date: "2023-08-11",
+    description: "A mysterious mist hanging over a sapphire lake, blurring the lines between reality and dream.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 22,
   },
   {
     id: 18,
@@ -158,6 +260,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2070&auto=format&fit=crop",
     date: "2023-10-25",
+    description: "The sun setting over the horizon, casting a long, amber glow across the world.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 13,
   },
   {
     id: 19,
@@ -166,6 +273,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop",
     date: "2023-12-01",
+    description: "The quiet beauty of a winter landscape, where everything is covered in a layer of frost.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 25,
   },
   {
     id: 20,
@@ -174,6 +286,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=2070&auto=format&fit=crop",
     date: "2024-03-01",
+    description: "A deep dive into a lush forest grove, where emerald leaves catch the sunlight.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 8,
   },
   {
     id: 21,
@@ -182,6 +299,11 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://citydecor.by/image/catalog/webp/catalog/fotooboi/blossom11-3.webp",
     date: "2024-01-15",
+    description: "Abstract lines and twilight colors weave together in a complex, intriguing pattern.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 10,
   },
   {
     id: 22,
@@ -190,8 +312,14 @@ export const artworkProducts: IProduct[] = [
     image:
       "https://i.etsystatic.com/15649312/c/1904/1904/47/0/il/7c6aad/5255873664/il_800x800.5255873664_h55w.jpg",
     date: "2023-11-30",
+    description: "Delicate flower petals brushed with gold leaf, a fusion of nature and luxury.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    options: commonOptions,
+    quantity: 16,
   },
 ];
+
 export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
   {
     id: 1,
@@ -200,7 +328,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=2070&auto=format&fit=crop",
     date: "2024-01-01",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "A hand-painted masterpiece bringing character and depth to your art collection.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 2,
@@ -209,7 +340,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=2090&auto=format&fit=crop",
     date: "2023-12-15",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Hand-painted Azure Serenity offers a gateway to calm and peace through art.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 3,
@@ -218,7 +352,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
     date: "2024-01-10",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "The original Golden Echoes painting with real texture and layer depth.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 4,
@@ -227,7 +364,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop",
     date: "2023-11-20",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Passionate strokes of red and crimson in this one-of-a-kind original work.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 5,
@@ -236,7 +376,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=2070&auto=format&fit=crop",
     date: "2024-01-05",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Abstract floral original painting, hand-signed and dated by the artist.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 6,
@@ -245,7 +388,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://i.etsystatic.com/15649312/c/1904/1904/47/0/il/7c6aad/5255873664/il_800x800.5255873664_h55w.jpg",
     date: "2023-10-15",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Bring the rustic charm of professional oil painting into your home.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 7,
@@ -254,7 +400,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
     date: "2022-02-15",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Original botanical painting with intricate details and layered glazes.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 8,
@@ -263,7 +412,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1976&auto=format&fit=crop",
     date: "2022-12-15",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "A small but powerful original painting from the series.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 9,
@@ -272,7 +424,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop",
     date: "2024-12-15",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Original large work on canvas, featuring the iconic botanical motifs.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 10,
@@ -281,7 +436,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=2080&auto=format&fit=crop",
     date: "2023-12-15",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "An ethereal original voyage into the cosmos, painted with mixed media.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 11,
@@ -290,7 +448,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=2070&auto=format&fit=crop",
     date: "2023-11-10",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Hand-painted oceanic rhythm captures the perpetual motion of the sea.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 12,
@@ -299,7 +460,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1574169208507-84376144848b?q=80&w=2079&auto=format&fit=crop",
     date: "2023-12-15",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "A luminous original painting that glows with soft, interior light.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 13,
@@ -308,7 +472,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=1974&auto=format&fit=crop",
     date: "2024-01-20",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Dramatic lunar landscape painted by hand on high-quality canvas.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 14,
@@ -317,7 +484,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop",
     date: "2023-09-05",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Original large painting of solar phenomena, full of energy and heat.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 15,
@@ -326,7 +496,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
     date: "2024-02-14",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Dreamy original with physical texture you can only find in original work.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 16,
@@ -335,7 +508,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop",
     date: "2023-05-30",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Mountain peaks rendered with professional palette knife techniques.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 17,
@@ -344,7 +520,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
     date: "2023-08-11",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Small original atmospheric painting, sapphire blue and silhouetted forms.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 18,
@@ -353,7 +532,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2070&auto=format&fit=crop",
     date: "2023-10-25",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Original sunset landscape, painted in professional acrylics on board.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 19,
@@ -362,7 +544,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop",
     date: "2023-12-01",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "A chillingly beautiful original winter scene, signed by the artist.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 20,
@@ -371,7 +556,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=2070&auto=format&fit=crop",
     date: "2024-03-01",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "A vibrant original exploration of color and light in a deep forest.",
+    stockStatus: "Out of Stock",
+    thumbnails: commonThumbnails,
+    quantity: 0,
   },
   {
     id: 21,
@@ -380,7 +568,10 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://citydecor.by/image/catalog/webp/catalog/fotooboi/blossom11-3.webp",
     date: "2024-01-15",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "An intricate original abstract work with complex layering and depth.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
   {
     id: 22,
@@ -389,6 +580,9 @@ export const artOriginalWorkProducts: IOriginalWorkProduct[] = [
     image:
       "https://i.etsystatic.com/15649312/c/1904/1904/47/0/il/7c6aad/5255873664/il_800x800.5255873664_h55w.jpg",
     date: "2023-11-30",
-    description: 'A hand-painted piece that brings character and elegance to any space.'
+    description: "Original work on canvas with mixed media and gold leaf accents.",
+    stockStatus: "In Stock",
+    thumbnails: commonThumbnails,
+    quantity: 1,
   },
 ];

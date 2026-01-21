@@ -6,10 +6,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import CartSidebar from "@/components/mainLayout/CartSidebar";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPrintsOpen, setIsPrintsOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const pathname = usePathname();
 
   const navLinks = [
@@ -194,7 +196,8 @@ const Navbar = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Shopping Cart"
-              className="group relative text-white/90 transition-all duration-300 hover:text-white"
+              onClick={() => setIsCartOpen(true)}
+              className="group relative text-white/90 transition-all duration-300 hover:text-white cursor-pointer"
             >
               <ShoppingCart className="h-5 w-5" />
               <span className="absolute -bottom-1 left-0 h-px w-0 bg-white transition-all duration-300 group-hover:w-full" />
@@ -235,7 +238,10 @@ const Navbar = () => {
                     ? [
                         { name: "Prints", href: "/prints" },
                         { name: "Small Print", href: "/prints/small" },
-                        { name: "Limited addition print", href: "/prints/limited"},
+                        {
+                          name: "Limited addition print",
+                          href: "/prints/limited",
+                        },
                       ]
                     : [];
 
@@ -320,6 +326,8 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </motion.nav>
   );
 };
