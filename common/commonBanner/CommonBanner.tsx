@@ -1,3 +1,5 @@
+"use client";
+import { motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 
 interface CommonBannerProps {
@@ -21,9 +23,18 @@ const CommonBanner = ({ title, backgroundImage }: CommonBannerProps) => {
 
       {/* Content */}
       <div className="relative flex h-full items-center justify-center px-4 text-center">
-        <h1 className=" text-5xl md:text-6xl lg:text-[100px] text-white tracking-wide">
+        <motion.h1
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{
+            duration: 0.8,
+            delay: 0.2,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          className=" text-5xl md:text-6xl lg:text-[100px] text-white tracking-wide"
+        >
           {title}
-        </h1>
+        </motion.h1>
       </div>
     </section>
   );

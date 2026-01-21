@@ -30,7 +30,7 @@ const TimelessArtwork = () => {
 
             <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
               <Link
-                href="/gallery"
+                href="/original-works"
                 className="inline-flex h-12 md:h-14 items-center justify-center bg-[#f3c265] px-8 md:px-10 font-lato text-sm md:text-base cursor-pointer active:scale-95 tracking-[0.2em] text-[#141414] transition-all hover:bg-[#E2AF5B]"
               >
                 BROWS GALLERY
