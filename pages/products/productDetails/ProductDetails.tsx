@@ -19,7 +19,6 @@ import {
   ChevronDown,
   Plus,
   Minus,
-  Share2,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -39,6 +38,9 @@ const ProductDetails = ({
   product: IProduct | IOriginalWorkProduct;
 }) => {
   const router = useRouter();
+
+  if (!product) return null;
+
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const [quantity, setQuantity] = useState(1);

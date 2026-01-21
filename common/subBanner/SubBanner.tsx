@@ -17,7 +17,7 @@ const SubBanner = ({
   currentPage,
 }: SubBannerProps) => {
   return (
-    <section className="relative h-[200px] md:h-[250px] lg:h-[300px] w-full overflow-hidden">
+    <section className="relative h-[250px] lg:h-[300px] w-full overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
@@ -32,7 +32,7 @@ const SubBanner = ({
       </div>
 
       {/* Content */}
-      <div className="container relative mx-auto flex h-full items-center px-4 lg:px-8">
+      <div className="container relative mx-auto flex h-full items-end pt-16 lg:pb-0 pb-16 lg:items-center px-4 lg:px-8">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
