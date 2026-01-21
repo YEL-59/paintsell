@@ -4,6 +4,11 @@ export interface IProduct {
   price: number;
   image: string;
   date: string;
+  description?: string;
+  stockStatus?: "In Stock" | "Out of Stock";
+  thumbnails?: string[];
+  mockups?: string[];
+  options?: string[];
 }
 export interface IOriginalWorkProduct {
   id: number;
@@ -11,17 +16,37 @@ export interface IOriginalWorkProduct {
   price: number;
   image: string;
   date: string;
-  description: string
+  description: string;
+  stockStatus?: "In Stock" | "Out of Stock";
+  thumbnails?: string[];
+  mockups?: string[];
 }
 
 export const artworkProducts: IProduct[] = [
   {
     id: 1,
-    title: "Verdant Whispers",
-    price: 2400,
+    title: "Make Us One Within You",
+    price: 1600,
     image:
       "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=2070&auto=format&fit=crop",
     date: "2024-01-01",
+    description: "Elevate your space with this exquisite fine art print, capturing the soulful intensity of a violinist lost in her melody. This piece blends abstract expressionism with classical elegance, making it a perfect centerpiece for any modern interior.",
+    stockStatus: "In Stock",
+    thumbnails: [
+      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=2090&auto=format&fit=crop",
+      "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
+      "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=2070&auto=format&fit=crop",
+      "https://i.etsystatic.com/15649312/c/1904/1904/47/0/il/7c6aad/5255873664/il_800x800.5255873664_h55w.jpg",
+      "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=85",
+      "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1976&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop"
+    ],
+    mockups: [
+      "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582201942988-13e60e4556ee?q=80&w=2070&auto=format&fit=crop"
+    ],
+    options: ["Framed", "Wrapped Canvas", "Poster Print"]
   },
   {
     id: 2,
