@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Autoplay, Navigation } from "swiper/modules";
 import { MoveLeft, MoveRight } from "lucide-react";
+import type { Swiper as SwiperType } from "swiper";
 
 // Import Swiper styles
 import "swiper/css";
@@ -67,6 +68,7 @@ const paintings = [
 const OriginalPaintings = () => {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
 
   return (
     <section className="py-24 md:py-32 overflow-hidden">
@@ -86,7 +88,7 @@ const OriginalPaintings = () => {
             loop={true}
             speed={1000}
             autoplay={{
-              delay: 3500,
+              delay: 1000,
               disableOnInteraction: false,
             }}
             coverflowEffect={{
@@ -100,11 +102,19 @@ const OriginalPaintings = () => {
               prevEl: prevRef.current,
               nextEl: nextRef.current,
             }}
-            onBeforeInit={(swiper) => {
-              // @ts-ignore
-              swiper.params.navigation.prevEl = prevRef.current;
-              // @ts-ignore
-              swiper.params.navigation.nextEl = nextRef.current;
+            onSwiper={(swiper) => {
+              setSwiperInstance(swiper);
+              // Ensure navigation is properly initialized
+              setTimeout(() => {
+                if (prevRef.current && nextRef.current) {
+                  // @ts-ignore
+                  swiper.params.navigation.prevEl = prevRef.current;
+                  // @ts-ignore
+                  swiper.params.navigation.nextEl = nextRef.current;
+                  swiper.navigation.init();
+                  swiper.navigation.update();
+                }
+              }, 100);
             }}
             modules={[EffectCoverflow, Autoplay, Navigation]}
             className="original-paintings-swiper pb-20!"

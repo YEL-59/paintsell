@@ -41,7 +41,7 @@ const exhibitionData = [
 
 const Exhibitions = () => {
   return (
-    <section className="relative min-h-screen overflow-hidden py-24 lg:py-32">
+    <section className="relative min-h-screen overflow-hidden py-24 lg:py-30 mb-30">
       {/* Dark Textured Background */}
       <div className="absolute inset-0 z-0 bg-[#1A1A1A]">
         <Image
@@ -73,7 +73,7 @@ const Exhibitions = () => {
                   {/* Top Separator for the first item */}
                   {index === 0 && <div className="h-px w-full bg-white/20" />}
 
-                  <div className="flex items-center justify-between py-8 transition-colors duration-300">
+                  <div className="flex items-center justify-between py-8 transition-colors duration-300 cursor-pointer">
                     <div className="flex items-center gap-4">
                       {/* Active Bullet Style */}
                       <div

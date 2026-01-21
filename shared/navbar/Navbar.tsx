@@ -79,6 +79,7 @@ const Navbar = () => {
               const dropdownItems =
                 link.name === "Prints"
                   ? [
+                      { name: "Prints", href: "/prints" },
                       { name: "Small Print", href: "/prints/small" },
                       {
                         name: "Limited addition print",
@@ -226,17 +227,15 @@ const Navbar = () => {
             variants={menuVariants}
             className="mt-4 lg:hidden"
           >
-            <div className="overflow-hidden rounded-3xl bg-black/40 px-4 pb-4 pt-2 backdrop-blur-md ring-1 ring-white/10">
+            <div className="overflow-hidden font-lato rounded-3xl bg-black/40 px-4 pb-4 pt-2 backdrop-blur-md ring-1 ring-white/10">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 const dropdownItems =
                   link.name === "Prints"
                     ? [
+                        { name: "Prints", href: "/prints" },
                         { name: "Small Print", href: "/prints/small" },
-                        {
-                          name: "Limited addition print",
-                          href: "/prints/limited",
-                        },
+                        { name: "Limited addition print", href: "/prints/limited"},
                       ]
                     : [];
 
