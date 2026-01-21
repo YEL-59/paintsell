@@ -72,7 +72,7 @@ const GetInTouch = () => {
             </div>
 
             {/* Office Image */}
-            <div className="relative h-[350px] lg:h-[415px] w-full  overflow-hidden">
+            <div className="relative h-[300px] lg:h-[380px] w-full  overflow-hidden">
               <Image
                 src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop"
                 alt="Office workspace with art"
