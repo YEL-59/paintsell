@@ -1,8 +1,8 @@
-import { IProduct } from "@/constants/products";
+import { IProduct, IOriginalWorkProduct } from "@/constants/products";
 import Image from "next/image";
 import Link from "next/link";
 
-const WorkCard = ({ work }: { work: IProduct }) => {
+const WorkCard = ({ work }: { work: IProduct | IOriginalWorkProduct }) => {
   return (
     <Link href={`/products/${work.id}`} className="group cursor-pointer block">
       {/* Image Container */}

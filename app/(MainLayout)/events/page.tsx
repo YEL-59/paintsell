@@ -1,5 +1,5 @@
 import CommonBanner from "@/common/commonBanner/CommonBanner";
-import BannerImage from "@/assets/images/common-banner.png";
+import BannerImage from "@/assets/images/all-products-banner.png";
 
 const EventsPage = () => {
   return (
