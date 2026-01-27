@@ -3,6 +3,9 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { addAddress } from "@/services/address";
 
 interface CheckoutFormData {
   billingFullName: string;
@@ -27,6 +30,8 @@ interface CheckoutFormData {
 
 const CheckoutPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
   const {
     register,
     handleSubmit,
@@ -41,9 +46,61 @@ const CheckoutPage = () => {
 
   const shipToDifferentAddress = watch("shipToDifferentAddress");
 
-  const onSubmit = (data: CheckoutFormData) => {
-    console.log("Order Submitted:", data);
-    setIsSuccess(true);
+  const onSubmit = async (data: CheckoutFormData) => {
+    setLoading(true);
+    try {
+      // Common logic for addresses
+      // If unchecked (shipToDifferentAddress is false), is_default should be true
+      // If checked (shipToDifferentAddress is true), is_default should be false
+      const isDefault = !data.shipToDifferentAddress;
+
+      // 1. Prepare Billing Address
+      const billingAddress = {
+        address_type: "billing",
+        country: data.billingCountry,
+        address_line1: data.billingAddress1,
+        address_line2: data.billingAddress2,
+        state: data.billingState,
+        city: data.billingCity,
+        zip_code: data.billingPostalCode,
+        is_default: isDefault
+      };
+
+      // Submit Billing Address
+      const billingRes = await addAddress(billingAddress);
+      
+      if (!(billingRes.status === true || billingRes.success === true)) {
+        throw new Error(billingRes.message || "Failed to save billing address.");
+      }
+
+      // 2. Prepare and Submit Shipping Address if different
+      if (data.shipToDifferentAddress) {
+        const shippingAddress = {
+          address_type: "shipping",
+          country: data.shippingCountry,
+          address_line1: data.shippingAddress1,
+          address_line2: data.shippingAddress2,
+          state: data.shippingState,
+          city: data.shippingCity,
+          zip_code: data.shippingPostalCode,
+          is_default: false // Per user instruction: "if user checked and it should be 'is_default': false"
+        };
+        
+        const shippingRes = await addAddress(shippingAddress);
+        if (!(shippingRes.status === true || shippingRes.success === true)) {
+          throw new Error(shippingRes.message || "Failed to save shipping address.");
+        }
+      }
+
+      toast.success("Address information saved successfully!");
+      console.log("Order Data:", data);
+      setIsSuccess(true);
+    } catch (error: any) {
+      toast.error(error.message || "An error occurred during checkout.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (isSuccess) {
@@ -94,10 +151,11 @@ const CheckoutPage = () => {
         {...register(name, {
           required: required ? `${label} is required` : false,
         })}
+        disabled={loading}
         placeholder={placeholder}
         className={`w-full border px-4 py-3 text-base lg:text-lg font-lato font-medium text-[#141414] focus:outline-none focus:border-[#0C2E46] transition-colors ${
           errors[name] ? "border-red-500" : "border-[#CACACA]"
-        }`}
+        } disabled:opacity-50`}
       />
       {errors[name] && (
         <p className="text-red-500 font-lato text-sm mt-1">
@@ -181,6 +239,7 @@ const CheckoutPage = () => {
               <input
                 type="checkbox"
                 id="shipToDifferentAddress"
+                disabled={loading}
                 {...register("shipToDifferentAddress")}
                 className="w-5 h-5 accent-[#0C2E46] cursor-pointer"
               />
@@ -267,6 +326,7 @@ const CheckoutPage = () => {
                   type="radio"
                   id="stripe"
                   value="stripe"
+                  disabled={loading}
                   {...register("paymentMethod")}
                   className="w-4 h-4 accent-black"
                 />
@@ -274,7 +334,7 @@ const CheckoutPage = () => {
                   htmlFor="stripe"
                   className="text-sm font-lato text-gray-800"
                 >
-                  Strip
+                  Stripe
                 </label>
               </div>
             </div>
@@ -306,9 +366,11 @@ const CheckoutPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-[#0C2E46] cursor-pointer text-white py-4 font-lato font-bold tracking-[0.2em] uppercase hover:bg-[#081F30] transition-all active:scale-[0.98]"
+              disabled={loading}
+              className="w-full bg-[#0C2E46] cursor-pointer text-white py-4 font-lato font-bold tracking-[0.2em] uppercase hover:bg-[#081F30] transition-all active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-2"
             >
-              Confirm Order
+              {loading && <Loader2 className="h-5 w-5 animate-spin" />}
+              {loading ? "Processing..." : "Confirm Order"}
             </button>
           </div>
         </form>

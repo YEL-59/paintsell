@@ -3,12 +3,18 @@
 import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
 
+/**
+ * Address API service to manage user addresses.
+ * Integrates with the backend API for CRUD operations.
+ */
+
 // get all address
 export const getAllAddress = async () => {
     const token = (await cookies()).get('token')?.value;
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/addresses`, {
         method: "GET",
         headers: {
+            "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` })
         }
     })
@@ -22,6 +28,7 @@ export const addAddress = async (data: FieldValues) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/addresses`, {
         method: "POST",
         headers: {
+            "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` })
         },
         body: JSON.stringify(data)
@@ -36,6 +43,7 @@ export const updateAddress = async (id: string, data: FieldValues) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/addresses/${id}`, {
         method: "PUT",
         headers: {
+            "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` })
         },
         body: JSON.stringify(data)
@@ -50,10 +58,10 @@ export const deleteAddress = async (id: string) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/addresses/${id}`, {
         method: "DELETE",
         headers: {
+            "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` })
         }
     })
     const result = await res.json();
     return result;
 }
-

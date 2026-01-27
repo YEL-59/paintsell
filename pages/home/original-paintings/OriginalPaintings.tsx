@@ -66,9 +66,8 @@ const paintings = [
 ];
 
 const OriginalPaintings = () => {
-  const prevRef = useRef<HTMLButtonElement>(null);
-  const nextRef = useRef<HTMLButtonElement>(null);
-  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+  const [prevEl, setPrevEl] = useState<HTMLButtonElement | null>(null);
+  const [nextEl, setNextEl] = useState<HTMLButtonElement | null>(null);
 
   return (
     <section className="py-24 md:py-32 overflow-hidden">
@@ -99,23 +98,22 @@ const OriginalPaintings = () => {
               slideShadows: true,
             }}
             navigation={{
-              prevEl: prevRef.current,
-              nextEl: nextRef.current,
+              prevEl: prevEl,
+              nextEl: nextEl,
             }}
             onSwiper={(swiper) => {
-              setSwiperInstance(swiper);
-              // Ensure navigation is properly initialized
+              // Ensure navigation is properly updated once elements are available
               setTimeout(() => {
-                if (prevRef.current && nextRef.current) {
-                  // @ts-ignore
-                  swiper.params.navigation.prevEl = prevRef.current;
-                  // @ts-ignore
-                  swiper.params.navigation.nextEl = nextRef.current;
+                if (swiper.navigation && swiper.params.navigation && typeof swiper.params.navigation !== 'boolean') {
+                  swiper.params.navigation.prevEl = prevEl;
+                  swiper.params.navigation.nextEl = nextEl;
+                  swiper.navigation.destroy();
                   swiper.navigation.init();
                   swiper.navigation.update();
                 }
-              }, 100);
+              });
             }}
+
             modules={[EffectCoverflow, Autoplay, Navigation]}
             className="original-paintings-swiper pb-20!"
           >
@@ -141,18 +139,19 @@ const OriginalPaintings = () => {
           {/* Navigation Buttons */}
           <div className="mt-8 flex items-center justify-center gap-6">
             <button
-              ref={prevRef}
+              ref={(node) => setPrevEl(node)}
               className="group flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-[#0C2E46]/30 text-[#0C2E46] transition-all duration-300 hover:border-[#0C2E46] hover:bg-[#0C2E46] hover:text-white"
             >
               <MoveLeft className="h-6 w-6" />
             </button>
             <button
-              ref={nextRef}
+              ref={(node) => setNextEl(node)}
               className="group flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-[#0C2E46] text-white transition-all duration-300 hover:bg-[#141414] shadow-lg"
             >
               <MoveRight className="h-6 w-6" />
             </button>
           </div>
+
         </div>
       </div>
 

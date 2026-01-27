@@ -1,6 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { createContact } from "@/services/contact";
 
 export interface ContactFormData {
   fullName: string;
@@ -10,6 +14,7 @@ export interface ContactFormData {
 }
 
 const ContactForm = () => {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -20,10 +25,31 @@ const ContactForm = () => {
     reValidateMode: "onChange",
   });
 
-  const onSubmit = (data: ContactFormData) => {
-    console.log("Form submitted:", data);
-    // Add your form submission logic here
-    reset();
+  const onSubmit = async (data: ContactFormData) => {
+    setLoading(true);
+    try {
+      // Map form data to service expected fields: name, email, phone, message
+      const contactData = {
+        name: data.fullName,
+        email: data.email,
+        phone: data.phoneNumber,
+        message: data.message,
+      };
+
+      const res = await createContact(contactData);
+      
+      if (res.status === true || res.success === true) {
+        toast.success(res.message || "Message sent successfully!");
+        reset();
+      } else {
+        toast.error(res.message || "Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again later.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,6 +67,7 @@ const ContactForm = () => {
           <input
             type="text"
             id="fullName"
+            disabled={loading}
             {...register("fullName", {
               required: "Full name is required",
               minLength: {
@@ -53,7 +80,7 @@ const ContactForm = () => {
               errors.fullName
                 ? "border-red-500 focus:border-red-500"
                 : "border-[#CACACA] focus:border-[#0C2E46]"
-            }`}
+            } disabled:opacity-50`}
           />
           {errors.fullName && (
             <p className="mt-1 font-lato text-xs text-red-500">
@@ -73,6 +100,7 @@ const ContactForm = () => {
           <input
             type="tel"
             id="phoneNumber"
+            disabled={loading}
             {...register("phoneNumber", {
               required: "Phone number is required",
               pattern: {
@@ -85,7 +113,7 @@ const ContactForm = () => {
               errors.phoneNumber
                 ? "border-red-500 focus:border-red-500"
                 : "border-[#CACACA] focus:border-[#0C2E46]"
-            }`}
+            } disabled:opacity-50`}
           />
           {errors.phoneNumber && (
             <p className="mt-1 font-lato text-xs text-red-500">
@@ -106,6 +134,7 @@ const ContactForm = () => {
         <input
           type="email"
           id="email"
+          disabled={loading}
           {...register("email", {
             required: "Email is required",
             pattern: {
@@ -118,7 +147,7 @@ const ContactForm = () => {
             errors.email
               ? "border-red-500 focus:border-red-500"
               : "border-[#CACACA] focus:border-[#0C2E46]"
-          }`}
+          } disabled:opacity-50`}
         />
         {errors.email && (
           <p className="mt-1 font-lato text-xs text-red-500">
@@ -137,6 +166,7 @@ const ContactForm = () => {
         </label>
         <textarea
           id="message"
+          disabled={loading}
           {...register("message", {
             required: "Message is required",
             minLength: {
@@ -150,7 +180,7 @@ const ContactForm = () => {
             errors.message
               ? "border-red-500 focus:border-red-500"
               : "border-[#CACACA] focus:border-[#0C2E46]"
-          }`}
+          } disabled:opacity-50`}
         />
         {errors.message && (
           <p className="mt-1 font-lato text-xs text-red-500">
@@ -162,8 +192,10 @@ const ContactForm = () => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full cursor-pointer bg-[#0C2E46] py-4 font-lato text-base font-bold tracking-wider text-white transition-all duration-300 active:scale-95 hover:bg-[#05304e]"
+        disabled={loading}
+        className="w-full cursor-pointer bg-[#0C2E46] py-4 font-lato text-base font-bold tracking-wider text-white transition-all duration-300 active:scale-95 hover:bg-[#05304e] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
+        {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         SUBMIT
       </button>
     </form>

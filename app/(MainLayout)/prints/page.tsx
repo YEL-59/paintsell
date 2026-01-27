@@ -1,7 +1,6 @@
 import BannerImg from "@/assets/images/common-banner.png";
-import GallerySection from "@/common/gallery/GallerySection";
 import SubBanner from "@/common/subBanner/SubBanner";
-import { artworkProducts } from "@/constants/products";
+import AllPrints from "@/pages/prints/allPrints/AllPrints";
 
 const PrintsPage = () => {
   return (
@@ -12,7 +11,7 @@ const PrintsPage = () => {
         rootLabel="Prints"
         currentPage="Print"
       />
-      <GallerySection title="Fine Art Print" products={artworkProducts} />
+      <AllPrints />
     </main>
   );
 };

@@ -1,9 +1,6 @@
-"use client";
-
-import SubBanner from "@/common/subBanner/SubBanner";
-import GallerySection from "@/common/gallery/GallerySection";
 import BannerImg from "@/assets/images/common-banner.png";
-import { artworkProducts } from "@/constants/products";
+import SubBanner from "@/common/subBanner/SubBanner";
+import AllSmallPrints from "@/pages/prints/small/AllSmallPrints";
 
 const SmallPrintsPage = () => {
   return (
@@ -14,7 +11,7 @@ const SmallPrintsPage = () => {
         rootLabel="Prints"
         currentPage="Small prints"
       />
-      <GallerySection title="Our Art Small Print" products={artworkProducts} />
+      <AllSmallPrints />
     </main>
   );
 };
