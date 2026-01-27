@@ -8,7 +8,7 @@ const Banner = () => {
     <section className="relative min-h-screen w-full overflow-hidden">
       {/* Background Image with Overlay */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat "
         style={{
           backgroundImage: `url(${BannerImg.src})`,
         }}
