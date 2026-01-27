@@ -102,9 +102,9 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
               href="/"
-              className="text-2xl tracking-[0.3em] text-white transition-all font-light duration-300 hover:opacity-80 sm:text-[32px]"
+              className="text-lg tracking-[0.3em] text-white transition-all font-light duration-300 hover:opacity-80 "
             >
-              ARTIS
+              Tevel Michaelness
             </Link>
           </motion.div>
 

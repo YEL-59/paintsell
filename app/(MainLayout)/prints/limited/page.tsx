@@ -1,7 +1,6 @@
 import SubBanner from "@/common/subBanner/SubBanner";
-import GallerySection from "@/common/gallery/GallerySection";
 import BannerImg from "@/assets/images/common-banner.png";
-import { artworkProducts } from "@/constants/products";
+import AllLimitedEditions from "@/pages/prints/limited/AllLimitedEditions";
 
 const LimitedPrintsPage = () => {
   return (
@@ -12,10 +11,7 @@ const LimitedPrintsPage = () => {
         rootLabel="Prints"
         currentPage="Limited Addition Print"
       />
-      <GallerySection
-        title="Limited Addition Print"
-        products={artworkProducts}
-      />
+      <AllLimitedEditions />
     </main>
   );
 };
