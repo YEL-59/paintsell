@@ -20,8 +20,9 @@ export const forgetPasswordSchema = z.object({
 });
 
 export const otpSchema = z.object({
-    otp: z.string().min(4, "Please enter all 4 digits"),
+    otp: z.string().min(6, "Please enter all 6 digits"),
 });
+
 
 export const passwordChangeSchema = z.object({
     password: z.string().min(1, "Password is required").min(6, "Password must be at least 6 characters"),

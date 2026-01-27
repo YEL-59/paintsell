@@ -5,8 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Mail, Eye, EyeOff } from "lucide-react";
+import { Mail, Eye, EyeOff, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -19,10 +21,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { loginSchema, LoginFormValues } from "@/lib/schemas/auth";
+import { loginUser } from "@/services/auth";
 import signin1 from "@/assets/images/signin1.png";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -32,8 +37,25 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = (data: LoginFormValues) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (data: LoginFormValues) => {
+    setLoading(true);
+    try {
+      const res = await loginUser(data);
+      // Handling both 'status' and 'success' fields for maximum compatibility
+      if (res.status === true || res.success === true) {
+        toast.success(res.message || "Logged in successfully!");
+        router.refresh();
+        router.push("/");
+      } else {
+
+        toast.error(res.message || "Login failed. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again later.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -120,7 +142,7 @@ const LoginForm = () => {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300 hover:text-[#001D35] transition-colors focus:outline-none"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#001D35] transition-colors focus:outline-none"
                       >
                         {showPassword ? (
                           <EyeOff className="w-[18px] h-[18px]" />
@@ -140,7 +162,6 @@ const LoginForm = () => {
                 href="/auth/forget"
                 className="text-[11px] text-gray-400 hover:text-[#001D35] transition-colors font-semibold uppercase tracking-widest border-b border-transparent hover:border-[#001D35]/20 pb-0.5"
               >
-
                 Forgot Password?
               </Link>
             </div>
@@ -148,9 +169,17 @@ const LoginForm = () => {
             <div className="space-y-4 pt-6">
               <Button
                 type="submit"
-                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98]"
+                disabled={loading}
+                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98] disabled:opacity-70"
               >
-                Sign In
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </Button>
 
               <Button

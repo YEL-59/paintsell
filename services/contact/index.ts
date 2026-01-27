@@ -10,7 +10,6 @@ export const createContact = async (data: FieldValues) => {
     formData.append("name", data.name);
     formData.append("email", data.email);
     formData.append("phone", data.phone);
-    formData.append("subject", data.subject);
     formData.append("message", data.message);
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/contact`, {

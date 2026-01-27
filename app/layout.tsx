@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Discover timeless art and creativity",
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +33,30 @@ export default function RootLayout({
         className={`${cormorant.variable} ${lato.variable} font-serif antialiased`}
       >
         <SmoothScroll>{children}</SmoothScroll>
+        <Toaster 
+          position="top-center" 
+          richColors 
+          closeButton
+          toastOptions={{
+            style: {
+              background: 'rgba(255, 255, 255, 0.8)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(0, 29, 53, 0.1)',
+              borderRadius: '16px',
+              padding: '16px 20px',
+              color: '#001D35',
+              fontFamily: 'var(--font-lato)',
+              fontSize: '14px',
+              fontWeight: '500',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+            },
+            className: "premium-toast",
+          }}
+        />
       </body>
     </html>
   );
 }
+
+
+

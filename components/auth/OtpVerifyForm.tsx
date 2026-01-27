@@ -5,6 +5,9 @@ import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 import {
   Form,
@@ -20,10 +23,13 @@ import {
 } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
 import { otpSchema, OtpFormValues } from "@/lib/schemas/auth";
+import { forgotPasswordVerifyOtp } from "@/services/auth";
 import verification1 from "@/assets/images/verification1.png";
 
 const OtpVerifyForm = () => {
   const [timeLeft, setTimeLeft] = React.useState(25);
+  const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
 
   const form = useForm<OtpFormValues>({
     resolver: zodResolver(otpSchema),
@@ -38,8 +44,30 @@ const OtpVerifyForm = () => {
     return () => clearTimeout(timer);
   }, [timeLeft]);
 
-  const onSubmit = (data: OtpFormValues) => {
-    console.log("OTP Form submitted:", data);
+  const onSubmit = async (data: OtpFormValues) => {
+    const email = sessionStorage.getItem("resetEmail");
+    if (!email) {
+      toast.error("Session expired. Please start the process again.");
+      router.push("/auth/forget");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await forgotPasswordVerifyOtp({ email, otp: data.otp });
+      if (res.status === true || res.success === true) {
+        toast.success(res.message || "OTP verified successfully!");
+        sessionStorage.setItem("resetOtp", data.otp);
+        router.push("/auth/passwordchange");
+      } else {
+        toast.error(res.message || "Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again later.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -88,27 +116,22 @@ const OtpVerifyForm = () => {
                 <FormItem className="flex flex-col items-center justify-center space-y-4">
                   <FormControl>
                     <InputOTP
-                      maxLength={4}
+                      maxLength={6}
                       {...field}
                     >
-                      <InputOTPGroup className="gap-4">
-                        <InputOTPSlot
-                          index={0}
-                          className="size-14 md:size-16 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none"
-                        />
-                        <InputOTPSlot
-                          index={1}
-                          className="size-14 md:size-16 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none"
-                        />
-                        <InputOTPSlot
-                          index={2}
-                          className="size-14 md:size-16 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none"
-                        />
-                        <InputOTPSlot
-                          index={3}
-                          className="size-14 md:size-16 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none"
-                        />
-                      </InputOTPGroup>
+                      <div className="flex gap-4 items-center">
+                        <InputOTPGroup className="gap-2 md:gap-3">
+                          <InputOTPSlot index={0} className="size-11 md:size-14 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none" />
+                          <InputOTPSlot index={1} className="size-11 md:size-14 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none" />
+                          <InputOTPSlot index={2} className="size-11 md:size-14 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none" />
+                        </InputOTPGroup>
+                        <div className="w-2 h-[2px] bg-gray-300" />
+                        <InputOTPGroup className="gap-2 md:gap-3">
+                          <InputOTPSlot index={3} className="size-11 md:size-14 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none" />
+                          <InputOTPSlot index={4} className="size-11 md:size-14 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none" />
+                          <InputOTPSlot index={5} className="size-11 md:size-14 rounded-none border-gray-100 bg-[#FAFAFA] text-xl font-medium focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#001D35] focus:bg-white transition-all shadow-none first:border-l first:rounded-none last:rounded-none" />
+                        </InputOTPGroup>
+                      </div>
                     </InputOTP>
                   </FormControl>
                   <FormMessage className="text-red-500 text-[10px] font-medium italic" />
@@ -119,9 +142,17 @@ const OtpVerifyForm = () => {
             <div className="space-y-6">
               <Button
                 type="submit"
-                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98]"
+                disabled={loading}
+                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98] disabled:opacity-70"
               >
-                Continue
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  "Continue"
+                )}
               </Button>
 
               <p className="text-center text-[11px] text-gray-400 font-medium tracking-tight">

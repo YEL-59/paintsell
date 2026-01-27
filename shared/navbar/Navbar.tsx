@@ -1,18 +1,52 @@
 "use client";
 
-import { useState } from "react";
-import { Search, User, ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, User, ShoppingCart, Menu, X, ChevronDown, LogOut, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import CartSidebar from "@/components/mainLayout/CartSidebar";
+import { getCurrentUser, logout } from "@/services/auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { toast } from "sonner";
 
-const Navbar = () => {
+const Navbar = ({ initialUser }: { initialUser: any }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPrintsOpen, setIsPrintsOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(initialUser);
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Only fetch if initialUser is null or we navigated
+    const fetchUser = async () => {
+      const user = await getCurrentUser();
+      setCurrentUser(user);
+    };
+    fetchUser();
+  }, [pathname, initialUser]); // Refresh user state on page change or if initialUser changes
+
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setCurrentUser(null);
+      toast.success("Logged out successfully");
+      router.push("/auth/login");
+    } catch (error) {
+      toast.error("Failed to logout");
+    }
+  };
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -180,16 +214,68 @@ const Navbar = () => {
               <span className="absolute -bottom-1 left-0 h-px w-0 bg-white transition-all duration-300 group-hover:w-full" />
             </motion.button>
 
-            {/* User Icon */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="User Account"
-              className="group relative hidden text-white/90 transition-all duration-300 hover:text-white sm:block"
-            >
-              <User className="h-5 w-5" />
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-white transition-all duration-300 group-hover:w-full" />
-            </motion.button>
+            {/* User Dropdown / Login */}
+            {currentUser ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="flex items-center focus:outline-none"
+                  >
+                    <Avatar className="h-8 w-8 ring-1 ring-white/20 transition-all hover:ring-white/50">
+                      <AvatarImage src={currentUser.image || currentUser.avatar || currentUser.profile_image} alt={currentUser.name} />
+                      <AvatarFallback className="bg-white/10 text-[10px] text-white font-medium">
+                        {currentUser.name?.charAt(0).toUpperCase() || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </motion.button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-64 mt-4 border-white/10 bg-black/70 text-white backdrop-blur-xl rounded-[24px] p-2 shadow-2xl ring-1 ring-white/10">
+                  <DropdownMenuLabel className="px-4 py-4 font-normal">
+                    <div className="flex items-center space-x-3">
+                      <Avatar className="h-12 w-12 ring-2 ring-white/10 shadow-lg">
+                        <AvatarImage src={currentUser.image || currentUser.avatar || currentUser.profile_image} />
+                        <AvatarFallback className="bg-white/10 text-sm font-medium">
+                          {currentUser.name?.charAt(0).toUpperCase() || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col space-y-0.5 overflow-hidden">
+                        <p className="text-[15px] font-semibold tracking-tight truncate">{currentUser.name || "User"}</p>
+                        <p className="text-[11px] text-white/50 truncate font-light">{currentUser.email}</p>
+                      </div>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-white/5 mx-2" />
+                  <DropdownMenuItem className="rounded-xl px-4 py-3 text-[14px] font-normal tracking-wide hover:bg-white/10 focus:bg-white/10 focus:text-white cursor-pointer transition-all duration-200 mt-1" asChild>
+                    <Link href="/contact" className="flex items-center">
+                      <Phone className="mr-3 h-4 w-4 text-white/60" />
+                      <span>Contact Center</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-white/5 mx-2 mt-1" />
+                  <DropdownMenuItem 
+                    onClick={handleLogout}
+                    className="rounded-xl px-4 py-3 text-[14px] font-normal tracking-wide text-red-400 hover:bg-red-500/10 hover:text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer transition-all duration-200 mt-1"
+                  >
+                    <LogOut className="mr-3 h-4 w-4" />
+                    <span>Sign Out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+
+              </DropdownMenu>
+            ) : (
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <Link
+                  href="/auth/login"
+                  aria-label="User Account"
+                  className="group relative flex text-white/90 transition-all duration-300 hover:text-white sm:block"
+                >
+                  <User className="h-5 w-5" />
+                  <span className="absolute -bottom-1 left-0 h-px w-0 bg-white transition-all duration-300 group-hover:w-full" />
+                </Link>
+              </motion.div>
+            )}
 
             {/* Cart Icon */}
             <motion.button
@@ -314,14 +400,44 @@ const Navbar = () => {
                 <span>Search</span>
               </motion.button>
 
-              {/* Mobile User */}
-              <motion.button
-                variants={itemVariants}
-                className="flex w-full items-center space-x-3 rounded-xl px-4 py-3 text-base font-light tracking-wide text-white transition-all duration-300 hover:bg-white/10 hover:text-white sm:hidden"
-              >
-                <User className="h-4 w-4" />
-                <span>Account</span>
-              </motion.button>
+              {/* Mobile User Section */}
+              {currentUser ? (
+                <>
+                  <motion.div variants={itemVariants} className="px-4 py-3">
+                    <div className="flex items-center space-x-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={currentUser.image || currentUser.avatar || currentUser.profile_image} />
+                        <AvatarFallback className="bg-white/10 text-xs font-medium text-white">
+                          {currentUser.name?.charAt(0).toUpperCase() || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium text-white">{currentUser.name}</span>
+                        <span className="text-[10px] text-white/50">{currentUser.email}</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                  <motion.button
+                    variants={itemVariants}
+                    onClick={handleLogout}
+                    className="flex w-full items-center space-x-3 rounded-xl px-4 py-3 text-base font-light tracking-wide text-red-400 transition-all duration-300 hover:bg-red-500/10"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Log out</span>
+                  </motion.button>
+                </>
+              ) : (
+                <motion.div variants={itemVariants}>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex w-full items-center space-x-3 rounded-xl px-4 py-3 text-base font-light tracking-wide text-white transition-all duration-300 hover:bg-white/10"
+                  >
+                    <User className="h-4 w-4" />
+                    <span>Login</span>
+                  </Link>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         )}
@@ -333,3 +449,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

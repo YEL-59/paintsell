@@ -5,8 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Mail, Eye, EyeOff, User } from "lucide-react";
+import { Mail, Eye, EyeOff, User, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -19,11 +21,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { registerSchema, RegisterFormValues } from "@/lib/schemas/auth";
+import { registerUser } from "@/services/auth";
 import register1 from "@/assets/images/register1.png";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -35,8 +40,30 @@ const RegisterForm = () => {
     },
   });
 
-  const onSubmit = (data: RegisterFormValues) => {
-    console.log("Register Form submitted:", data);
+  const onSubmit = async (data: RegisterFormValues) => {
+    setLoading(true);
+    try {
+      const userData = {
+        name: data.fullName,
+        email: data.email,
+        password: data.password,
+        passwordConfirmation: data.confirmPassword
+      };
+      
+      const res = await registerUser(userData);
+      // Handling both 'status' and 'success' fields for maximum compatibility
+      if (res.status === true || res.success === true) {
+        toast.success(res.message || "Account created successfully!");
+        router.push("/auth/login");
+      } else {
+        toast.error(res.message || "Registration failed. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again later.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -199,9 +226,17 @@ const RegisterForm = () => {
             <div className="space-y-4 pt-8">
               <Button
                 type="submit"
-                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98]"
+                disabled={loading}
+                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98] disabled:opacity-70"
               >
-                Sign Up
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating account...
+                  </>
+                ) : (
+                  "Sign Up"
+                )}
               </Button>
 
               <Button

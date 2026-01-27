@@ -4,8 +4,10 @@ import React from "react";
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -18,11 +20,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { passwordChangeSchema, PasswordChangeFormValues } from "@/lib/schemas/auth";
+import { forgotPasswordResetPassword } from "@/services/auth";
 import newpassword1 from "@/assets/images/newpassword1.png";
 
 const PasswordChangeForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
 
   const form = useForm<PasswordChangeFormValues>({
     resolver: zodResolver(passwordChangeSchema),
@@ -32,8 +37,39 @@ const PasswordChangeForm = () => {
     },
   });
 
-  const onSubmit = (data: PasswordChangeFormValues) => {
-    console.log("Password Change Form submitted:", data);
+  const onSubmit = async (data: PasswordChangeFormValues) => {
+    const email = sessionStorage.getItem("resetEmail");
+    const otp = sessionStorage.getItem("resetOtp");
+
+    if (!email || !otp) {
+      toast.error("Session expired. Please start the process again.");
+      router.push("/auth/forget");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await forgotPasswordResetPassword({
+        email,
+        otp,
+        password: data.password,
+        password_confirmation: data.confirmPassword,
+      });
+
+      if (res.status === true || res.success === true) {
+        toast.success(res.message || "Password reset successfully!");
+        sessionStorage.removeItem("resetEmail");
+        sessionStorage.removeItem("resetOtp");
+        router.push("/auth/login");
+      } else {
+        toast.error(res.message || "Failed to reset password. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again later.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -148,9 +184,17 @@ const PasswordChangeForm = () => {
             <div className="pt-4">
               <Button
                 type="submit"
-                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98]"
+                disabled={loading}
+                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98] disabled:opacity-70"
               >
-                Continue
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Resetting...
+                  </>
+                ) : (
+                  "Continue"
+                )}
               </Button>
             </div>
           </form>
