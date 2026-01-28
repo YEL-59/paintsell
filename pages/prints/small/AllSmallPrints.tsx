@@ -5,9 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useSmallPrintProducts } from "@/services/hooks/useProducts";
 
+export interface ISmallPrintProduct {
+  id: number;
+  product_name: string;
+  framed_price: string;
+  unframed_price: string;
+  image: string;
+}
+
 const AllSmallPrints = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [activeSort, setActiveSort] = useState("Default");
   const filterRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -16,8 +23,10 @@ const AllSmallPrints = () => {
     loading,
     currentPage,
     searchQuery,
+    activeSort,
     handlePageChange,
-    handleSearch
+    handleSearch,
+    handleSort,
   } = useSmallPrintProducts();
 
   // Close filter when clicking outside
@@ -96,7 +105,7 @@ const AllSmallPrints = () => {
                       <button
                         key={option}
                         onClick={() => {
-                          setActiveSort(option);
+                          handleSort(option);
                           setIsFilterOpen(false);
                         }}
                         className={`w-full px-5 py-3.5 cursor-pointer text-left rounded-xl font-lato text-sm transition-all ${
@@ -119,12 +128,14 @@ const AllSmallPrints = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32">
             <Loader2 className="h-12 w-12 text-[#0c2e46] animate-spin mb-4" />
-            <p className="text-gray-500 font-lato animate-pulse">Loading small prints...</p>
+            <p className="text-gray-500 font-lato animate-pulse">
+              Loading small prints...
+            </p>
           </div>
         ) : products.length > 0 ? (
           <>
             <div className="grid grid-cols-2 lg:grid-cols-3 lg:gap-x-8 gap-x-4 lg:gap-y-12 gap-y-6">
-              {products.map((product, index) => (
+              {products.map((product: ISmallPrintProduct, index: number) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
@@ -145,19 +156,28 @@ const AllSmallPrints = () => {
                       ) : (
                         <div className="flex flex-col items-center justify-center text-gray-300">
                           <ImageOff className="h-12 w-12 mb-2" />
-                          <span className="text-xs uppercase tracking-widest font-lato">No image available</span>
+                          <span className="text-xs uppercase tracking-widest font-lato">
+                            No image available
+                          </span>
                         </div>
                       )}
                     </div>
 
                     {/* Text Content */}
                     <div className="text-center px-2">
-                       <h3 className="text-base md:text-lg lg:text-2xl font-bold font-lato text-[#141414] tracking-wide mb-1 truncate">
+                      <h3 className="text-base md:text-lg lg:text-2xl font-bold font-lato text-[#141414] tracking-wide mb-1 truncate">
                         {product.product_name}
                       </h3>
-                      <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
-                        ${parseFloat(product.framed_price).toLocaleString()}
-                      </p>
+                      <div className="flex items-center justify-center gap-4">
+                        <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
+                          <span className="text-gray-500">Frame Price:</span> $
+                          {parseFloat(product.framed_price).toLocaleString()}
+                        </p>
+                        <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
+                          <span className="text-gray-500">Unframe Price:</span>{" "}
+                          ${parseFloat(product.unframed_price).toLocaleString()}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -176,21 +196,22 @@ const AllSmallPrints = () => {
                 </button>
 
                 <div className="flex items-center gap-2">
-                  {Array.from({ length: pagination.last_page }, (_, i) => i + 1).map(
-                    (page) => (
-                      <button
-                        key={page}
-                        onClick={() => onPageChange(page)}
-                        className={`flex h-12 w-12 items-center justify-center rounded-xl border font-lato text-lg font-medium transition-all cursor-pointer ${
-                          currentPage === page
-                            ? "border-[#0C2E46] bg-[#E3F1FA] text-[#0C2E46]"
-                            : "border-gray-200 text-gray-600 hover:bg-gray-50"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ),
-                  )}
+                  {Array.from(
+                    { length: pagination.last_page },
+                    (_, i) => i + 1,
+                  ).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => onPageChange(page)}
+                      className={`flex h-12 w-12 items-center justify-center rounded-xl border font-lato text-lg font-medium transition-all cursor-pointer ${
+                        currentPage === page
+                          ? "border-[#0C2E46] bg-[#E3F1FA] text-[#0C2E46]"
+                          : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
                 </div>
 
                 <button
@@ -210,8 +231,8 @@ const AllSmallPrints = () => {
               No prints found
             </h3>
             <p className="text-gray-500 font-lato max-w-sm mx-auto">
-              We couldn't find any small prints matching "{searchQuery}". 
-              Please try a different term or check your spelling.
+              We couldn't find any small prints matching "{searchQuery}". Please
+              try a different term or check your spelling.
             </p>
           </div>
         )}

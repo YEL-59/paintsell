@@ -71,7 +71,7 @@ const RegisterForm = () => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="flex w-full max-w-[1100px] min-h-[700px] p-5 bg-white rounded-none overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.2)] flex-col md:flex-row mx-auto border border-gray-100"
+      className="flex w-full max-w-[1100px] font-lato min-h-[700px] p-5 bg-white rounded-none overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.2)] flex-col md:flex-row mx-auto border border-gray-100"
     >
       {/* Left Column: Artwork */}
       <div className="w-full md:w-1/2 relative h-[350px] md:h-auto overflow-hidden">

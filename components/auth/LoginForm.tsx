@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Mail, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Mail, Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -63,7 +63,7 @@ const LoginForm = () => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="flex w-full max-w-[1000px] min-h-[600px] p-5 bg-white rounded-none overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.2)] flex-col md:flex-row mx-auto border border-gray-100"
+      className="flex w-full max-w-[1000px] min-h-[600px] font-lato p-5 bg-white rounded-none overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.2)] flex-col md:flex-row mx-auto border border-gray-100"
     >
       {/* Left Column: Artwork */}
       <div className="w-full md:w-1/2 relative h-[350px] md:h-auto overflow-hidden">
@@ -87,6 +87,7 @@ const LoginForm = () => {
 
       {/* Right Column: Form */}
       <div className="w-full md:w-1/2 p-10 md:p-14 lg:p-16  flex flex-col justify-center bg-white relative">
+      <Link href="/" className="absolute top-4 left-4 flex items-center gap-2 hover:gap-4 transition-all duration-300 text-gray-500 hover:text-[#001D35] cursor-pointer"><ArrowLeft size={18}/> Back Home</Link>
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-serif text-[#001D35] mb-4 tracking-wider uppercase">
             Log in

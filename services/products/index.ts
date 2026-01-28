@@ -1,8 +1,42 @@
 "use server"
 
-/**
- * Product API service to fetch various product types.
- */
+
+// get all products
+export const getAllProducts = async (page: number = 1, perPage: number = 12, search: string = "") => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/products/all?search=${search}&page=${page}&per_page=${perPage}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            next: { revalidate: 60 }
+        });
+        const result = await res.json();
+        return result;
+    } catch (error) {
+        console.error("Error fetching all products:", error);
+        return { success: false, message: "Failed to fetch all products" };
+    }
+}
+
+// get single product
+export const getSingleProduct = async (id: string) => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/products/${id}/details`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            next: { revalidate: 60 }
+        });
+        const result = await res.json();
+        return result;
+    } catch (error) {
+        console.error("Error fetching single product:", error);
+        return { success: false, message: "Failed to fetch single product" };
+    }
+}
+
 
 export const getOriginalPaintings = async (page: number = 1, perPage: number = 12, search: string = "") => {
     try {

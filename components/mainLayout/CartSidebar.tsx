@@ -14,7 +14,6 @@ interface CartItem {
   option: string;
   quantity: number;
 }
-
 interface CartSidebarProps {
   isOpen: boolean;
   onClose: () => void;

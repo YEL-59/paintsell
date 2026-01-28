@@ -1,19 +1,26 @@
 "use client";
 
+import { useAllProducts } from "@/services/hooks/useProducts";
+import { Search, SlidersHorizontal, Loader2, ImageOff } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import WorkCard from "@/components/mainLayout/WorkCard";
-import { IProduct, artworkProducts } from "@/constants/products";
-
-const ITEMS_PER_PAGE = 12;
+import Link from "next/link";
 
 const AllProducts = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [activeSort, setActiveSort] = useState("Default");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const filterRef = useRef<HTMLDivElement>(null);
+
+  const {
+    products,
+    pagination,
+    loading,
+    currentPage,
+    searchQuery,
+    activeSort,
+    handlePageChange,
+    handleSearch,
+    handleSort,
+  } = useAllProducts();
 
   // Close filter when clicking outside
   useEffect(() => {
@@ -35,11 +42,6 @@ const AllProducts = () => {
     };
   }, [isFilterOpen]);
 
-  // Reset to page 1 when search or sort changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, activeSort]);
-
   const sortOptions = [
     "Default",
     "Newest Artist",
@@ -48,37 +50,8 @@ const AllProducts = () => {
     "Most Price",
   ];
 
-  // Search and Sort Logic
-  const filteredProducts = artworkProducts
-    .filter((product: IProduct) =>
-      product.title.toLowerCase().includes(searchQuery.toLowerCase()),
-    )
-    .sort((a: IProduct, b: IProduct) => {
-      if (activeSort === "Newest Artist") {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      }
-      if (activeSort === "Oldest Artist") {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
-      }
-      if (activeSort === "Least Price") {
-        return a.price - b.price;
-      }
-      if (activeSort === "Most Price") {
-        return b.price - a.price;
-      }
-      return a.id - b.id;
-    });
-
-  // Pagination Logic
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedProducts = filteredProducts.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE,
-  );
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const onPageChange = (page: number) => {
+    handlePageChange(page);
     window.scrollTo({ top: 300, behavior: "smooth" });
   };
 
@@ -99,7 +72,7 @@ const AllProducts = () => {
                 type="text"
                 placeholder="Search"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 className="w-full rounded-full border border-gray-200 py-3 pl-12 pr-6 font-lato text-sm focus:border-[#0C2E46] focus:outline-none"
               />
             </div>
@@ -127,7 +100,7 @@ const AllProducts = () => {
                         <button
                           key={option}
                           onClick={() => {
-                            setActiveSort(option);
+                            handleSort(option);
                             setIsFilterOpen(false);
                           }}
                           className={`px-6 cursor-pointer py-4 text-left font-lato text-sm transition-colors ${
@@ -147,11 +120,18 @@ const AllProducts = () => {
           </div>
         </div>
 
-        {/* Product Grid */}
-        {paginatedProducts.length > 0 ? (
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-32">
+            <Loader2 className="h-12 w-12 text-[#0c2e46] animate-spin mb-4" />
+            <p className="text-gray-500 font-lato animate-pulse">
+              Loading products...
+            </p>
+          </div>
+        ) : products.length > 0 ? (
           <>
             <div className="grid grid-cols-2 lg:grid-cols-3 lg:gap-x-8 gap-x-4 lg:gap-y-12 gap-y-6">
-              {paginatedProducts.map((product: IProduct, index: number) => (
+              {products.map((product: any, index: number) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -160,16 +140,57 @@ const AllProducts = () => {
                   transition={{ delay: index * 0.1 }}
                   className="group cursor-pointer text-center"
                 >
-                  <WorkCard work={product} />
+                  {/* Reuse WorkCard or inline structure if WorkCard expects specific props */}
+                  <Link href={`/products/${product.id}`} className="group cursor-pointer block">
+                    {/* Image Container */}
+                    <div className="relative aspect-square overflow-hidden mb-5 bg-[#F9F9F9] lg:h-[460px] md:h-[300px] h-[200px] w-full">
+                      {product.image ? (
+                        <img
+                          src={product.image}
+                          alt={product.product_name}
+                          className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center text-gray-300 w-full h-full">
+                          <ImageOff className="h-12 w-12 mb-2" />
+                          <span className="text-xs uppercase tracking-widest font-lato">
+                            No image
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Text Content */}
+                    <div className="text-center">
+                      <h3 className="text-base md:text-lg lg:text-2xl font-bold font-lato text-[#141414] tracking-wide mb-1">
+                        {product.product_name}
+                      </h3>
+                      <div className="flex items-center justify-center gap-4">
+                        <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
+                          <span className="text-gray-500">Frame Price:</span> $
+                          {parseFloat(
+                            product.framed_price || "0",
+                          ).toLocaleString()}
+                        </p>
+                        <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
+                          <span className="text-gray-500">Unframe Price:</span>{" "}
+                          $
+                          {parseFloat(
+                            product.unframed_price || "0",
+                          ).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
                 </motion.div>
               ))}
             </div>
 
             {/* Pagination controls */}
-            {totalPages > 1 && (
+            {pagination && pagination.last_page > 1 && (
               <div className="mt-20 flex items-center justify-end gap-2 md:gap-4">
                 <button
-                  onClick={() => handlePageChange(currentPage - 1)}
+                  onClick={() => onPageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                   className="flex h-12 items-center justify-center rounded-xl border border-gray-200 px-6 font-lato text-base text-gray-600 transition-all hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
                 >
@@ -177,26 +198,27 @@ const AllProducts = () => {
                 </button>
 
                 <div className="flex items-center gap-2">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (page) => (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`flex h-12 w-12 items-center justify-center rounded-xl border font-lato text-lg font-medium transition-all cursor-pointer ${
-                          currentPage === page
-                            ? "border-[#0C2E46] bg-[#E3F1FA] text-[#0C2E46]"
-                            : "border-gray-200 text-gray-600 hover:bg-gray-50"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ),
-                  )}
+                  {Array.from(
+                    { length: pagination.last_page },
+                    (_, i) => i + 1,
+                  ).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => onPageChange(page)}
+                      className={`flex h-12 w-12 items-center justify-center rounded-xl border font-lato text-lg font-medium transition-all cursor-pointer ${
+                        currentPage === page
+                          ? "border-[#0C2E46] bg-[#E3F1FA] text-[#0C2E46]"
+                          : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
                 </div>
 
                 <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
+                  onClick={() => onPageChange(currentPage + 1)}
+                  disabled={currentPage === pagination.last_page}
                   className="flex h-12 items-center justify-center rounded-xl border border-gray-200 px-6 font-lato text-base text-gray-600 transition-all hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
                 >
                   Next

@@ -15,27 +15,20 @@ import PayImg5 from "@/assets/images/payment-system (5).png";
 import PayImg6 from "@/assets/images/payment-system (6).png";
 import { motion, AnimatePresence } from "framer-motion";
 import WallBackgroundImg from "@/assets/images/wall-background.png";
-import {
-  ChevronDown,
-  Plus,
-  Minus,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import {
-  IProduct,
-  IOriginalWorkProduct,
-  artworkProducts,
-} from "@/constants/products";
+import { Plus, Minus, ChevronLeft, ChevronRight } from "lucide-react";
 import SubBanner from "@/common/subBanner/SubBanner";
 import CommonBannerImg from "@/assets/images/common-banner.png";
 import WorkCard from "@/components/mainLayout/WorkCard";
 import { ShareSvg } from "@/components/svg/MainLayoutSvg";
+import { IProductDetails } from "@/app/(MainLayout)/products/[id]/page";
+import { IProduct } from "@/types";
 
 const ProductDetails = ({
   product,
+  youMayAlsoLike,
 }: {
-  product: IProduct | IOriginalWorkProduct;
+  product: IProductDetails;
+  youMayAlsoLike: IProduct[];
 }) => {
   const router = useRouter();
 
@@ -44,11 +37,12 @@ const ProductDetails = ({
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const [quantity, setQuantity] = useState(1);
-  const [selectedOption, setSelectedOption] = useState(
-    "options" in product ? product.options?.[0] || "" : "",
+
+  const [selectedType, setSelectedType] = useState<"Framed" | "Unframed">(
+    "Unframed",
   );
   const [activeTab, setActiveTab] = useState<string | null>("description");
-  const [mainImage, setMainImage] = useState(product.image);
+  const [mainImage, setMainImage] = useState(product.images![0]);
 
   const toggleTab = (tab: string) => {
     setActiveTab(activeTab === tab ? null : tab);
@@ -56,22 +50,29 @@ const ProductDetails = ({
 
   // Autoplay system for main gallery
   useEffect(() => {
-    if (!product.thumbnails || product.thumbnails.length === 0) return;
+    if (!product.images || product.images.length === 0) return;
 
     const interval = setInterval(() => {
       setMainImage((current) => {
-        const currentIndex = product.thumbnails!.indexOf(current);
-        const nextIndex = (currentIndex + 1) % product.thumbnails!.length;
-        return product.thumbnails![nextIndex];
+        const currentIndex = product.images!.indexOf(current);
+        const nextIndex = (currentIndex + 1) % product.images!.length;
+        return product.images![nextIndex];
       });
     }, 5000);
+  }, [product.images]);
 
-    return () => clearInterval(interval);
-  }, [product.thumbnails]);
+  useEffect(() => {
+    if (product.framed_price && !product.unframed_price) {
+      setSelectedType("Framed");
+    } else if (!product.framed_price && product.unframed_price) {
+      setSelectedType("Unframed");
+    }
+  }, [product]);
 
-  const relatedProducts = artworkProducts
-    .filter((p) => p.id !== product.id)
-    .slice(0, 6);
+
+  const handleAddToCart = (quantity: number) => {
+    console.log(quantity);
+  }
 
   return (
     <main className="bg-white">
@@ -96,7 +97,7 @@ const ProductDetails = ({
             >
               <Image
                 src={mainImage}
-                alt={product.title}
+                alt={product.name}
                 fill
                 className="object-cover transition-all duration-700"
                 priority
@@ -109,7 +110,7 @@ const ProductDetails = ({
                 Overview &
               </h3>
               <div className="grid grid-cols-3 gap-3">
-                {product.thumbnails?.map((thumb, idx) => (
+                {product.images?.map((thumb, idx) => (
                   <button
                     key={idx}
                     onClick={() => setMainImage(thumb)}
@@ -135,41 +136,57 @@ const ProductDetails = ({
           <div className="flex flex-col">
             <div className="space-y-6 mb-10">
               <h1 className="text-2xl md:text-3xl lg:text-[42px] font-serif text-[#141414] tracking-tight leading-[1.1]">
-                {product.title}
+                {product.name}
               </h1>
-              <p className="text-2xl lg:text-[32px] font-lato font-medium text-[#141414]">
-                $
-                {product.price.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                })}
-              </p>
+              <div className="flex gap-4 items-center">
+                <p className="text-lg lg:text-xl font-lato font-bold">
+                  <span className="font-medium text-gray-500">
+                    {selectedType} Price:
+                  </span>{" "}
+                  $
+                  {parseFloat(
+                    selectedType === "Framed"
+                      ? product.framed_price || "0"
+                      : product.unframed_price || "0",
+                  ).toLocaleString()}
+                </p>
+              </div>
             </div>
 
             {/* Options Selection */}
             <div className="space-y-8">
-              {"options" in product &&
-                product.options &&
-                product.options.length > 0 && (
-                  <div className="space-y-3">
-                    <label className="block font-lato text-base lg:text-lg font-medium uppercase tracking-widest text-[#686868]">
-                      Option
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={selectedOption}
-                        onChange={(e) => setSelectedOption(e.target.value)}
-                        className="w-full appearance-none border border-gray-200 bg-white px-6 py-4 font-lato text-base focus:border-[#0C2E46] focus:outline-none transition-all cursor-pointer"
-                      >
-                        {product.options?.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown className="absolute right-6 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                    </div>
-                  </div>
-                )}
+              {/* Frame Selection */}
+              <div className="space-y-3">
+                <p className="font-lato text-base lg:text-lg font-medium uppercase tracking-widest text-[#686868]">
+                  Select Option
+                </p>
+                <div className="flex gap-4">
+                  {product.unframed_price && (
+                    <button
+                      onClick={() => setSelectedType("Unframed")}
+                      className={`px-6 py-3 border rounded-sm transition-all font-lato font-medium ${
+                        selectedType === "Unframed"
+                          ? "border-[#0C2E46] bg-[#0C2E46] text-white"
+                          : "border-gray-200 text-[#141414] hover:border-[#0C2E46]"
+                      }`}
+                    >
+                      Unframed
+                    </button>
+                  )}
+                  {product.framed_price && (
+                    <button
+                      onClick={() => setSelectedType("Framed")}
+                      className={`px-6 py-3 border rounded-sm transition-all font-lato font-medium ${
+                        selectedType === "Framed"
+                          ? "border-[#0C2E46] bg-[#0C2E46] text-white"
+                          : "border-gray-200 text-[#141414] hover:border-[#0C2E46]"
+                      }`}
+                    >
+                      Framed
+                    </button>
+                  )}
+                </div>
+              </div>
 
               <div className="space-y-1">
                 <p className="font-lato text-base lg:text-lg font-medium uppercase tracking-widest text-[#686868]">
@@ -177,12 +194,12 @@ const ProductDetails = ({
                 </p>
                 <p
                   className={`font-lato text-base lg:text-lg font-medium ${
-                    product.stockStatus === "In Stock"
+                    product.stock_quantity > 0
                       ? "text-[#10B981]"
                       : "text-[#EF4444]"
                   }`}
                 >
-                  {product.stockStatus === "In Stock"
+                  {product.stock_quantity > 0
                     ? "In stock, and ready to ship"
                     : "Out of stock"}
                 </p>
@@ -266,9 +283,14 @@ const ProductDetails = ({
                 </div>
               </div>
 
-              {product?.quantity > 0 ? (
+              {product?.stock_quantity > 0 ? (
                 <div className="flex flex-col gap-4 sm:flex-row">
-                  <button className="flex-1 border border-[#0C2E46] py-4 font-lato text-sm md:text-base font-bold tracking-[0.2em] text-[#0C2E46] transition-all hover:bg-gray-50 active:scale-95 uppercase cursor-pointer">
+                  <button
+                    onClick={() =>
+                      handleAddToCart(quantity)
+                    }
+                    className="flex-1 border border-[#0C2E46] py-4 font-lato text-sm md:text-base font-bold tracking-[0.2em] text-[#0C2E46] transition-all hover:bg-gray-50 active:scale-95 uppercase cursor-pointer"
+                  >
                     Add to Bag
                   </button>
                   <button
@@ -480,7 +502,7 @@ const ProductDetails = ({
             }}
             className="w-full"
           >
-            {relatedProducts.map((p, idx) => (
+            {youMayAlsoLike.map((p, idx) => (
               <SwiperSlide key={p.id}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}

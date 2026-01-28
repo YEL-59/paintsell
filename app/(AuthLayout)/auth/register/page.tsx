@@ -5,7 +5,7 @@ import register from "@/assets/images/register.png";
 
 const RegisterPage = () => {
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center p-4">
+    <div className="relative min-h-screen w-full flex items-center font-lato justify-center p-4">
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
