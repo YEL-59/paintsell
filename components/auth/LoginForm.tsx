@@ -113,7 +113,7 @@ const LoginForm = () => {
                       <Input
                         placeholder="Enter email your address"
                         {...field}
-                        className="w-full px-4 py-7 border border-gray-100 bg-[#FAFAFA] rounded-none focus:bg-white focus:border-[#001D35]/30 transition-all text-[14px] pr-10 placeholder:text-gray-300 font-sans h-auto focus-visible:ring-0 focus-visible:ring-offset-0 border-b-2 focus:border-b-[#001D35] shadow-none"
+                        className="w-full px-4 py-3 border border-gray-100 bg-[#FAFAFA] rounded-none focus:bg-white focus:border-[#001D35]/30 transition-all text-[14px] pr-10 placeholder:text-gray-300 font-sans h-auto focus-visible:ring-0 focus-visible:ring-offset-0 border-b-2 focus:border-b-[#001D35] shadow-none"
                       />
                       <Mail className="absolute right-3.5 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-gray-300 group-focus-within:text-[#001D35] transition-colors" />
                     </div>
@@ -138,7 +138,7 @@ const LoginForm = () => {
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         {...field}
-                        className="w-full px-4 py-7 border border-gray-100 bg-[#FAFAFA] rounded-none focus:bg-white focus:border-[#001D35]/30 transition-all text-[14px] pr-10 placeholder:text-gray-300 font-sans h-auto focus-visible:ring-0 focus-visible:ring-offset-0 border-b-2 focus:border-b-[#001D35] shadow-none"
+                        className="w-full px-4 py-3 border border-gray-100 bg-[#FAFAFA] rounded-none focus:bg-white focus:border-[#001D35]/30 transition-all text-[14px] pr-10 placeholder:text-gray-300 font-sans h-auto focus-visible:ring-0 focus-visible:ring-offset-0 border-b-2 focus:border-b-[#001D35] shadow-none"
                       />
                       <button
                         type="button"
@@ -171,7 +171,7 @@ const LoginForm = () => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98] disabled:opacity-70"
+                className="w-full bg-[#001D35] text-white py-4 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98] disabled:opacity-70"
               >
                 {loading ? (
                   <>
@@ -186,7 +186,7 @@ const LoginForm = () => {
               <Button
                 variant="outline"
                 asChild
-                className="w-full border border-gray-200 text-[#001D35] py-8 px-4 rounded-none font-bold hover:bg-gray-50 transition-all text-[13px] uppercase tracking-[0.25em] font-sans h-auto cursor-pointer shadow-none active:scale-[0.98]"
+                className="w-full border border-gray-200 text-[#001D35] py-4 px-4 rounded-none font-bold hover:bg-gray-50 transition-all text-[13px] uppercase tracking-[0.25em] font-sans h-auto cursor-pointer shadow-none active:scale-[0.98]"
               >
                 <Link href="/auth/register">Create an account</Link>
               </Button>

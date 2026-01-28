@@ -6,40 +6,23 @@ import { motion } from "framer-motion";
 import ExhibitBG from "@/assets/images/footer-banner.png";
 import ExhibitArtist from "@/assets/images/meet-the-artist-img.png";
 
-const exhibitionData = [
-  {
-    id: 1,
-    location: "The Hara Art Gallery, Israel",
-    date: "15th-22th May 2025",
-  },
-  {
-    id: 2,
-    location: "The Hara Art Gallery, Israel",
-    date: "15th-22th May 2025",
-  },
-  {
-    id: 3,
-    location: "The Hara Art Gallery, Israel",
-    date: "15th-22th May 2025",
-  },
-  {
-    id: 4,
-    location: "The Hara Art Gallery, Israel",
-    date: "15th-22th May 2025",
-  },
-  {
-    id: 5,
-    location: "The Hara Art Gallery, Israel",
-    date: "15th-22th May 2025",
-  },
-  {
-    id: 6,
-    location: "The Hara Art Gallery, Israel",
-    date: "15th-22th May 2025",
-  },
-];
+interface ExhibitionsProps {
+  image?: string;
+  titles?: { id: number; title: string }[];
+}
 
-const Exhibitions = () => {
+const Exhibitions = ({ image, titles }: ExhibitionsProps) => {
+  // Use provided data or fallback to static data
+  const exhibitionImage = image || ExhibitArtist;
+  const exhibitionTitles = titles || [
+    { id: 1, title: "The Hara Art Gallery, Israel - 15th-22th May 2025" },
+    { id: 2, title: "The Hara Art Gallery, Israel - 15th-22th May 2025" },
+    { id: 3, title: "The Hara Art Gallery, Israel - 15th-22th May 2025" },
+    { id: 4, title: "The Hara Art Gallery, Israel - 15th-22th May 2025" },
+    { id: 5, title: "The Hara Art Gallery, Israel - 15th-22th May 2025" },
+    { id: 6, title: "The Hara Art Gallery, Israel - 15th-22th May 2025" },
+  ];
+
   return (
     <section className="relative min-h-screen overflow-hidden py-24 lg:py-30 mb-30">
       {/* Dark Textured Background */}
@@ -68,7 +51,7 @@ const Exhibitions = () => {
             </h2>
 
             <div className="flex flex-col">
-              {exhibitionData.map((item, index) => (
+              {exhibitionTitles.map((item, index) => (
                 <div key={item.id} className="group flex flex-col">
                   {/* Top Separator for the first item */}
                   {index === 0 && <div className="h-px w-full bg-white/20" />}
@@ -82,8 +65,7 @@ const Exhibitions = () => {
                       <p
                         className={`font-lato text-base lg:text-lg tracking-wide ${index === 0 ? "text-white" : "text-white/60"}`}
                       >
-                        {item.location}{" "}
-                        <span className="ml-1 opacity-80">{item.date}</span>
+                        {item.title}
                       </p>
                     </div>
 
@@ -109,7 +91,7 @@ const Exhibitions = () => {
           >
             <div className="relative h-full w-full overflow-hidden shadow-2xl">
               <Image
-                src={ExhibitArtist}
+                src={exhibitionImage}
                 alt="Angela in Exhibition"
                 fill
                 className="object-cover transition-transform duration-1000 hover:scale-105"

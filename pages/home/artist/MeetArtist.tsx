@@ -5,7 +5,7 @@ import ArtistBG from "@/assets/images/meet-the-artist-banner.png";
 import ArtistImg from "@/assets/images/meet-the-artist-img.png";
 import { motion } from "framer-motion";
 
-const MeetArtist = ({title, description, button}: {title: string, description: string, button: string}) => {
+const MeetArtist = ({title, description, button, image}: {title: string, description: string, button: string, image?: string}) => {
   return (
     <section className="relative overflow-hidden py-30 bg-white">
       {/* Background Image */}
@@ -30,7 +30,7 @@ const MeetArtist = ({title, description, button}: {title: string, description: s
           >
             <div className="relative aspect-square overflow-hidden  2xl:h-[850px] xl:h-[700px] lg:h-[600px] md:h-[500px] h-[400px] w-full rounded-sm lg:aspect-4/5">
               <Image
-                src={ArtistImg}
+                src={image || ArtistImg}
                 alt="Meet the Artist"
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
