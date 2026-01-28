@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { getOriginalPaintings, getPrintProducts, getSmallPrintProducts, getLimitedEditionProducts } from "@/services/products";
+import { getOriginalPaintings, getPrintProducts, getSmallPrintProducts, getLimitedEditionProducts, getAllProducts } from "@/services/products";
 import { toast } from "sonner";
 
 interface IBaseProduct {
@@ -43,6 +43,7 @@ const useProductFetch = (
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(initialPage);
     const [searchQuery, setSearchQuery] = useState("");
+    const [activeSort, setActiveSort] = useState("Default");
 
     const fetchData = useCallback(async (page: number, search: string) => {
         setLoading(true);
@@ -69,16 +70,48 @@ const useProductFetch = (
         return () => clearTimeout(timeoutId);
     }, [currentPage, searchQuery, fetchData]);
 
+    // Apply sorting
+    const sortedProducts = (() => {
+        const items = [...products];
+        switch (activeSort) {
+            case "Newest Artist":
+            case "Newest artist":
+                return items.sort((a, b) => b.id - a.id);
+            case "Oldest Artist":
+            case "Oldest artist":
+                return items.sort((a, b) => a.id - b.id);
+            case "Latest Price":
+            case "Least Price":
+                return items.sort((a, b) => {
+                    const priceA = parseFloat(a.unframed_price || a.framed_price || a.price || 0);
+                    const priceB = parseFloat(b.unframed_price || b.framed_price || b.price || 0);
+                    return priceA - priceB;
+                });
+            case "Most Price":
+                return items.sort((a, b) => {
+                    const priceA = parseFloat(a.unframed_price || a.framed_price || a.price || 0);
+                    const priceB = parseFloat(b.unframed_price || b.framed_price || b.price || 0);
+                    return priceB - priceA;
+                });
+            default:
+                return items;
+        }
+    })();
+
     return {
-        products,
+        products: sortedProducts,
         pagination,
         loading,
         currentPage,
         searchQuery,
+        activeSort,
         handlePageChange: (page: number) => setCurrentPage(page),
         handleSearch: (query: string) => {
             setSearchQuery(query);
             setCurrentPage(1);
+        },
+        handleSort: (sort: string) => {
+            setActiveSort(sort);
         },
         refresh: () => fetchData(currentPage, searchQuery)
     };
@@ -96,6 +129,16 @@ export const useSmallPrintProducts = (initialPage: number = 1, perPage: number =
     return useProductFetch(getSmallPrintProducts, "small_print_products", initialPage, perPage);
 };
 
+
+
+// ... (rest of imports map to same lines, just updating line 4)
+
+// ... (keeping existing hooks)
+
 export const useLimitedEditionProducts = (initialPage: number = 1, perPage: number = 12) => {
     return useProductFetch(getLimitedEditionProducts, "limited_edition_products", initialPage, perPage);
+};
+
+export const useAllProducts = (initialPage: number = 1, perPage: number = 12) => {
+    return useProductFetch(getAllProducts, "featured_works", initialPage, perPage);
 };

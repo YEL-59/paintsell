@@ -31,11 +31,10 @@ export const loginUser = async (userData: FieldValues) => {
         body: formData
     })
     const result = await res.json();
-    console.log("LOGIN_RESPONSE:", { status: result.status, success: result.success, hasToken: !!result.token, hasData: !!result.data });
 
-    if (result.status === true || result.success === true) {
-        (await cookies()).set('token', result.token);
-        (await cookies()).set('user', JSON.stringify(result.data));
+    if (result.success) {
+        (await cookies()).set('token', result?.data?.token);
+        (await cookies()).set('user', JSON.stringify(result?.data?.user));
     }
     return result;
 
@@ -47,16 +46,12 @@ export const getCurrentUser = async () => {
     const accessToken = (await cookies()).get('token')?.value;
     const userData = (await cookies()).get('user')?.value;
 
-    console.log("AUTH_CHECK - Token:", !!accessToken, "UserCookie:", !!userData);
-
-    if (userData) {
+    if (userData && accessToken) {
         try {
             const parsedUser = JSON.parse(userData);
-            console.log("AUTH_CHECK - User Keys:", Object.keys(parsedUser));
             return parsedUser;
-        } catch (error) {
-            console.error("Error parsing user data cookie:", error);
-            return null;
+        } catch (error: any) {
+            return Error(error)
         }
     }
     return null;

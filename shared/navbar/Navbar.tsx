@@ -34,8 +34,8 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
       setCurrentUser(user);
     };
     fetchUser();
-  }, [pathname, initialUser]); // Refresh user state on page change or if initialUser changes
-
+  }, [pathname, initialUser]);
+  console.log("CURRENT USER", currentUser); 
 
   const handleLogout = async () => {
     try {
@@ -221,28 +221,28 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    className="flex items-center focus:outline-none"
+                    className="flex items-center font-lato focus:outline-none"
                   >
                     <Avatar className="h-8 w-8 ring-1 ring-white/20 transition-all hover:ring-white/50">
-                      <AvatarImage src={currentUser.image || currentUser.avatar || currentUser.profile_image} alt={currentUser.name} />
+                      <AvatarImage src={currentUser?.image || currentUser?.avatar || currentUser?.profile_image} alt={currentUser.name} />
                       <AvatarFallback className="bg-white/10 text-[10px] text-white font-medium">
-                        {currentUser.name?.charAt(0).toUpperCase() || "U"}
+                        {currentUser?.first_name?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </motion.button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-64 mt-4 border-white/10 bg-black/70 text-white backdrop-blur-xl rounded-[24px] p-2 shadow-2xl ring-1 ring-white/10">
+                <DropdownMenuContent className="w-64 mt-4 border-white/10 font-lato bg-black/70 text-white backdrop-blur-xl rounded-[24px] p-2 shadow-2xl ring-1 ring-white/10">
                   <DropdownMenuLabel className="px-4 py-4 font-normal">
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-12 w-12 ring-2 ring-white/10 shadow-lg">
-                        <AvatarImage src={currentUser.image || currentUser.avatar || currentUser.profile_image} />
-                        <AvatarFallback className="bg-white/10 text-sm font-medium">
-                          {currentUser.name?.charAt(0).toUpperCase() || "U"}
+                        <AvatarImage src={currentUser?.image || currentUser?.avatar || currentUser?.profile_image} />
+                        <AvatarFallback className="bg-white/10 text-lg text-white font-lato font-medium">
+                          {currentUser?.first_name?.charAt(0).toUpperCase() || "U"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col space-y-0.5 overflow-hidden">
-                        <p className="text-[15px] font-semibold tracking-tight truncate">{currentUser.name || "User"}</p>
-                        <p className="text-[11px] text-white/50 truncate font-light">{currentUser.email}</p>
+                        <p className="md:text-lg text-base font-semibold tracking-tight truncate font-lato">{currentUser?.first_name + " " + currentUser?.last_name || "User"}</p>
+                        <p className="md:text-sm text-xs text-white/50 truncate font-light font-lato">{currentUser?.email}</p>
                       </div>
                     </div>
                   </DropdownMenuLabel>

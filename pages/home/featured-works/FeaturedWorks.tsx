@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
 import WorkCard from "@/components/mainLayout/WorkCard";
-import { artworkProducts, IProduct } from "@/constants/products";
+import { IProduct } from "@/types";
 
-const FeaturedWorks = () => {
+const FeaturedWorks = ({featuredWorks} : {featuredWorks : IProduct[]}) => {
   return (
     <section className="py-30 bg-white">
       <div className="container mx-auto px-4">
@@ -29,7 +29,7 @@ const FeaturedWorks = () => {
 
         {/* Grid Section */}
         <div className="grid grid-cols-2 lg:grid-cols-3 lg:gap-x-8 gap-x-4 lg:gap-y-12 gap-y-6">
-          {artworkProducts?.slice(0, 6)?.map((work: IProduct) => (
+          {featuredWorks?.slice(0, 6)?.map((work: IProduct) => (
             <WorkCard key={work.id} work={work} />
           ))}
         </div>

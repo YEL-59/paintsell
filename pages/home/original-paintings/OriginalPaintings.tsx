@@ -1,71 +1,17 @@
 "use client";
-
-import { useRef, useState } from "react";
+import {useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Autoplay, Navigation } from "swiper/modules";
 import { MoveLeft, MoveRight } from "lucide-react";
-import type { Swiper as SwiperType } from "swiper";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 
-const paintings = [
-  {
-    id: 1,
-    image:
-      "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=80",
-  },
-  {
-    id: 2,
-    image:
-      "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=2080&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1976&auto=format&fit=crop",
-  },
-  {
-    id: 4,
-    image:
-      "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop",
-  },
-  {
-    id: 5,
-    image:
-      "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=2070&auto=format&fit=crop",
-  },
-  {
-    id: 6,
-    image:
-      "https://img.freepik.com/premium-photo/drawing-plant-with-sun-it_1320300-7204.jpg?uid=R191150260&ga=GA1.1.766574978.1765429508&semt=ais_hybrid&w=740&q=80",
-  },
-  {
-    id: 7,
-    image:
-      "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=2080&auto=format&fit=crop",
-  },
-  {
-    id: 8,
-    image:
-      "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1976&auto=format&fit=crop",
-  },
-  {
-    id: 9,
-    image:
-      "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=2038&auto=format&fit=crop",
-  },
-  {
-    id: 10,
-    image:
-      "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=2070&auto=format&fit=crop",
-  },
-];
 
-const OriginalPaintings = () => {
+const OriginalPaintings = ({originalPaintingsData}: {originalPaintingsData: {id: number, image: string}[]}) => {
   const [prevEl, setPrevEl] = useState<HTMLButtonElement | null>(null);
   const [nextEl, setNextEl] = useState<HTMLButtonElement | null>(null);
 
@@ -117,7 +63,7 @@ const OriginalPaintings = () => {
             modules={[EffectCoverflow, Autoplay, Navigation]}
             className="original-paintings-swiper pb-20!"
           >
-            {paintings?.map((painting, index) => (
+            {originalPaintingsData?.map((painting, index) => (
               <SwiperSlide
                 key={`${painting.id}-${index}`}
                 className="w-[300px]! md:w-[350px]! lg:w-[380px]!"

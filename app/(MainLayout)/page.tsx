@@ -5,12 +5,14 @@ import InstagramSection from "@/pages/home/instagram/InstagramSection";
 import SmallPrint from "@/pages/home/small-print/SmallPrint";
 import OriginalPaintings from "@/pages/home/original-paintings/OriginalPaintings";
 import TimelessArtwork from "@/pages/home/timeless-artwork/TimelessArtwork";
+import { getAllHomeData } from "@/services/home";
 
-const HomePage = () => {
+const HomePage = async() => {
+  const {data : homeData} = await getAllHomeData();
   return (
     <div>
-      <Banner />
-      <FeaturedWorks />
+      <Banner heroData={homeData?.hero_banner}/>
+      <FeaturedWorks featuredWorks={homeData?.featured_words}/>
       <MeetArtist
         title="Meet The Artist"
         description="Meet the artist behind the creations. With a passion for
@@ -20,8 +22,8 @@ const HomePage = () => {
         button="LEARN MORE"
       />
       <InstagramSection />
-      <SmallPrint />
-      <OriginalPaintings />
+      <SmallPrint smallPrintsData={homeData?.our_art_small_print}/>
+      <OriginalPaintings originalPaintingsData={homeData?.original_paintings}/>
       <TimelessArtwork />
     </div>
   );

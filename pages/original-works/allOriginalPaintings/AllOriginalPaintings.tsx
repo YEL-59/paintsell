@@ -7,7 +7,6 @@ import { useOriginalPaintings } from "@/services/hooks/useProducts";
 
 const AllOriginalPaintings = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [activeSort, setActiveSort] = useState("Default");
   const filterRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -16,8 +15,10 @@ const AllOriginalPaintings = () => {
     loading,
     currentPage,
     searchQuery,
+    activeSort,
     handlePageChange,
-    handleSearch
+    handleSearch,
+    handleSort,
   } = useOriginalPaintings();
 
   // Close filter when clicking outside
@@ -98,7 +99,7 @@ const AllOriginalPaintings = () => {
                         <button
                           key={option}
                           onClick={() => {
-                            setActiveSort(option);
+                            handleSort(option);
                             setIsFilterOpen(false);
                           }}
                           className={`px-6 py-4 rounded-xl text-left font-lato text-sm transition-all cursor-pointer ${
@@ -122,7 +123,9 @@ const AllOriginalPaintings = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32">
             <Loader2 className="h-12 w-12 text-[#0c2e46] animate-spin mb-4" />
-            <p className="text-gray-500 font-lato animate-pulse">Searching artworks...</p>
+            <p className="text-gray-500 font-lato animate-pulse">
+              Searching artworks...
+            </p>
           </div>
         ) : products.length > 0 ? (
           <>
@@ -149,20 +152,29 @@ const AllOriginalPaintings = () => {
                       ) : (
                         <div className="flex flex-col items-center justify-center text-gray-300">
                           <ImageOff className="h-12 w-12 mb-2" />
-                          <span className="text-xs uppercase tracking-widest font-lato">No image available</span>
+                          <span className="text-xs uppercase tracking-widest font-lato">
+                            No image available
+                          </span>
                         </div>
                       )}
                     </div>
 
                     {/* Text Content */}
                     <div>
-                      <div className="flex justify-between">
+                      <div>
                         <h3 className="text-base lg:text-lg text-[#141414] font-bold font-lato tracking-wide mb-1 flex-1 pr-4">
                           {product.product_name}
                         </h3>
-                        <p className="text-base lg:text-lg font-bold font-lato text-[#141414]">
-                          ${parseFloat(product.framed_price).toLocaleString()}
+                         <div className="flex items-center justify-between my-2 gap-4">
+                        <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
+                          <span className="text-gray-500  font-bold">Frame Price:</span> $
+                          {parseFloat(product.framed_price).toLocaleString()}
                         </p>
+                        <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
+                          <span className="text-gray-500  font-bold">Unframe Price:</span>{" "}
+                          ${parseFloat(product.unframed_price).toLocaleString()}
+                        </p>
+                      </div>
                       </div>
                       <p className="text-sm lg:text-base font-lato text-[#686868] line-clamp-2">
                         {product.short_description || product.description}
@@ -185,21 +197,22 @@ const AllOriginalPaintings = () => {
                 </button>
 
                 <div className="flex items-center gap-2">
-                  {Array.from({ length: pagination.last_page }, (_, i) => i + 1).map(
-                    (page) => (
-                      <button
-                        key={page}
-                        onClick={() => onPageChange(page)}
-                        className={`flex h-12 w-12 items-center justify-center rounded-xl border font-lato text-lg font-medium transition-all cursor-pointer ${
-                          currentPage === page
-                            ? "border-[#0C2E46] bg-[#E3F1FA] text-[#0C2E46]"
-                            : "border-gray-200 text-gray-600 hover:bg-gray-50"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ),
-                  )}
+                  {Array.from(
+                    { length: pagination.last_page },
+                    (_, i) => i + 1,
+                  ).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => onPageChange(page)}
+                      className={`flex h-12 w-12 items-center justify-center rounded-xl border font-lato text-lg font-medium transition-all cursor-pointer ${
+                        currentPage === page
+                          ? "border-[#0C2E46] bg-[#E3F1FA] text-[#0C2E46]"
+                          : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
                 </div>
 
                 <button
@@ -219,8 +232,8 @@ const AllOriginalPaintings = () => {
               No results found
             </h3>
             <p className="text-gray-500 font-lato max-w-sm mx-auto">
-              We couldn't find any paintings matching "{searchQuery}". 
-              Try adjusting your query or exploring other pages.
+              We couldn't find any paintings matching "{searchQuery}". Try
+              adjusting your query or exploring other pages.
             </p>
           </div>
         )}

@@ -1,21 +1,37 @@
 "use client";
 import { motion } from "framer-motion";
-import BannerImg from "@/assets/images/home-banner.png";
 import Link from "next/link";
 
-const Banner = () => {
+export interface IHeroData {
+  title: string;
+  id: number;
+  image_url: string;
+  video_url: string;
+}
+
+const Banner = ({ heroData }: { heroData: IHeroData }) => {
   return (
     <section className="relative min-h-screen w-full overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat "
-        style={{
-          backgroundImage: `url(${BannerImg.src})`,
-        }}
-      >
-        {/* Dark Overlay for better text readability */}
-        <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/40 to-black/70" />
-      </div>
+      {heroData?.video_url ? (
+        <video
+          autoPlay
+          muted
+          loop
+          className="absolute inset-0 object-cover w-full h-full"
+        >
+          <source src={heroData?.video_url} type="video/mp4" />
+        </video>
+      ) : (
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat "
+          style={{
+            backgroundImage: `url(${heroData?.image_url})`,
+          }}
+        >
+          {/* Dark Overlay for better text readability */}
+          <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/40 to-black/70" />
+        </div>
+      )}
 
       {/* Content Container */}
       <div className="relative z-10">
@@ -32,7 +48,7 @@ const Banner = () => {
               }}
               className="text-4xl font-medium tracking-wide text-white sm:text-5xl md:text-6xl lg:text-[100px]"
             >
-              Art Collection
+              {heroData?.title || "Art Collection"} 
             </motion.h1>
 
             <motion.div
@@ -45,12 +61,18 @@ const Banner = () => {
               }}
               className="flex flex-wrap gap-4 pt-4"
             >
-              <Link href={'/products'} className="group relative overflow-hidden bg-white px-8 py-3.5 font-lato cursor-pointer active:scale-95 text-sm sm:text-base font-medium tracking-wide text-[#0C2E46] transition-all duration-300 hover:bg-white/90">
+              <Link
+                href={"/products"}
+                className="group relative overflow-hidden bg-white px-8 py-3.5 font-lato cursor-pointer active:scale-95 text-sm sm:text-base font-medium tracking-wide text-[#0C2E46] transition-all duration-300 hover:bg-white/90"
+              >
                 <span className="relative z-10">SHOP NOW</span>
                 <div className="absolute inset-0 -translate-x-full bg-black/5 transition-transform duration-300 group-hover:translate-x-0" />
               </Link>
 
-              <Link href={'/about'} className="group relative overflow-hidden border border-white/40 bg-transparent px-8 py-3.5 font-lato cursor-pointer active:scale-95 text-sm sm:text-base font-medium tracking-wide text-white backdrop-blur-sm transition-all duration-300 hover:border-white/60 hover:text-[#0C2E46] hover:bg-white">
+              <Link
+                href={"/about"}
+                className="group relative overflow-hidden border border-white/40 bg-transparent px-8 py-3.5 font-lato cursor-pointer active:scale-95 text-sm sm:text-base font-medium tracking-wide text-white backdrop-blur-sm transition-all duration-300 hover:border-white/60 hover:text-[#0C2E46] hover:bg-white"
+              >
                 <span className="relative z-10">ARTIST</span>
               </Link>
             </motion.div>
@@ -59,9 +81,9 @@ const Banner = () => {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce border px-2 py-1 rounded-full">
         <div className="flex flex-col items-center space-y-2">
-          <div className="h-12 w-px bg-white/40" />
+          <div className="h-6 w-px bg-white/40" />
           <div className="h-2 w-2 rounded-full bg-white/60" />
         </div>
       </div>
