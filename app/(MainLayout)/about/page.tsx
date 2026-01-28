@@ -1,20 +1,54 @@
-import BannerImage from "@/assets/images/about-banner.png";
+"use client";
+
+import { useAboutUs } from "@/services/hooks";
 import CommonBanner from "@/common/commonBanner/CommonBanner";
 import MeetArtist from "@/pages/home/artist/MeetArtist";
 import TimelessArtwork from "@/pages/home/timeless-artwork/TimelessArtwork";
 import Exhibitions from "@/pages/about/exhibitions/Exhibitions";
 
 const AboutPage = () => {
+  const { data, loading, error } = useAboutUs();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#0C2E46] mx-auto mb-4"></div>
+          <p className="text-lg text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-lg text-red-600">{error || "Failed to load about us data"}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const aboutSection = data.about_section[0];
+  const exhibition = data.exhibitions[0];
+
   return (
     <div>
-      <CommonBanner backgroundImage={BannerImage} title="Meet The Artist" />
-      <MeetArtist
-        title="About Angela"
-        description="Angela is a professionally trained artist and a graduate of the Bezalel Academy of Arts and Design, Jerusalem in Israel. With a strong academic background in fine arts, she has transitioned from a dedicated student to a high-caliber professional whose work is recognized for its technical precision and emotional depth.
-Known for her sophisticated style and mastery of [mention medium, e.g., Oil/Acrylic, Angela’s art is featured in private collections worldwide. Her journey from the rigorous art studios of Israel to the global stage reflects her commitment to excellence. Through her vibrant social media presence and professional mentorship, she has become an influential voice, inspiring both collectors and fellow artists with her modern approach to traditional techniques."
-        button="INSTAGRAM"
+      <CommonBanner 
+        backgroundImage={data.hero_banner.image} 
+        title={data.hero_banner.title} 
       />
-      <Exhibitions />
+      <MeetArtist
+        title={aboutSection.name}
+        description={aboutSection.description}
+        button="INSTAGRAM"
+        image={aboutSection.image}
+      />
+      <Exhibitions 
+        image={exhibition.image}
+        titles={exhibition.titles}
+      />
       <TimelessArtwork />
     </div>
   );

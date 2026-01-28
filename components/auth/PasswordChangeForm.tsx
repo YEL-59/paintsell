@@ -126,7 +126,7 @@ const PasswordChangeForm = () => {
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         {...field}
-                        className="w-full px-4 py-7 border border-gray-100 bg-[#FAFAFA] rounded-none focus:bg-white focus:border-[#001D35]/30 transition-all text-[14px] pr-10 placeholder:text-gray-300 font-sans h-auto focus-visible:ring-0 focus-visible:ring-offset-0 border-b-2 focus:border-b-[#001D35] shadow-none"
+                        className="w-full px-4 py-3 border border-gray-100 bg-[#FAFAFA] rounded-none focus:bg-white focus:border-[#001D35]/30 transition-all text-[14px] pr-10 placeholder:text-gray-300 font-sans h-auto focus-visible:ring-0 focus-visible:ring-offset-0 border-b-2 focus:border-b-[#001D35] shadow-none"
                       />
                       <button
                         type="button"
@@ -161,7 +161,7 @@ const PasswordChangeForm = () => {
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         {...field}
-                        className="w-full px-4 py-7 border border-gray-100 bg-[#FAFAFA] rounded-none focus:bg-white focus:border-[#001D35]/30 transition-all text-[14px] pr-10 placeholder:text-gray-300 font-sans h-auto focus-visible:ring-0 focus-visible:ring-offset-0 border-b-2 focus:border-b-[#001D35] shadow-none"
+                        className="w-full px-4 py-3 border border-gray-100 bg-[#FAFAFA] rounded-none focus:bg-white focus:border-[#001D35]/30 transition-all text-[14px] pr-10 placeholder:text-gray-300 font-sans h-auto focus-visible:ring-0 focus-visible:ring-offset-0 border-b-2 focus:border-b-[#001D35] shadow-none"
                       />
                       <button
                         type="button"
@@ -185,7 +185,7 @@ const PasswordChangeForm = () => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#001D35] text-white py-8 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98] disabled:opacity-70"
+                className="w-full bg-[#001D35] text-white py-4 px-4 rounded-none font-bold hover:bg-[#002848] transition-all text-[13px] uppercase tracking-[0.25em] shadow-xl shadow-[#001d35]/20 font-sans h-auto cursor-pointer border-none active:scale-[0.98] disabled:opacity-70"
               >
                 {loading ? (
                   <>
