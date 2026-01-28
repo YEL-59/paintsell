@@ -15,33 +15,20 @@ import PayImg5 from "@/assets/images/payment-system (5).png";
 import PayImg6 from "@/assets/images/payment-system (6).png";
 import { motion, AnimatePresence } from "framer-motion";
 import WallBackgroundImg from "@/assets/images/wall-background.png";
-import {
-  Plus,
-  Minus,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { Plus, Minus, ChevronLeft, ChevronRight } from "lucide-react";
 import SubBanner from "@/common/subBanner/SubBanner";
 import CommonBannerImg from "@/assets/images/common-banner.png";
 import WorkCard from "@/components/mainLayout/WorkCard";
 import { ShareSvg } from "@/components/svg/MainLayoutSvg";
 import { IProductDetails } from "@/app/(MainLayout)/products/[id]/page";
-
-export interface IYouMayAlsoLike {
-  id: number;
-  product_name: string;
-  framed_price: string;
-  unframed_price: string;
-  price: string;
-  image: string;
-}
+import { IProduct } from "@/types";
 
 const ProductDetails = ({
   product,
   youMayAlsoLike,
 }: {
   product: IProductDetails;
-  youMayAlsoLike: IYouMayAlsoLike[];
+  youMayAlsoLike: IProduct[];
 }) => {
   const router = useRouter();
 
@@ -51,6 +38,9 @@ const ProductDetails = ({
   const nextRef = useRef<HTMLButtonElement>(null);
   const [quantity, setQuantity] = useState(1);
 
+  const [selectedType, setSelectedType] = useState<"Framed" | "Unframed">(
+    "Unframed",
+  );
   const [activeTab, setActiveTab] = useState<string | null>("description");
   const [mainImage, setMainImage] = useState(product.images![0]);
 
@@ -69,9 +59,20 @@ const ProductDetails = ({
         return product.images![nextIndex];
       });
     }, 5000);
-
-    return () => clearInterval(interval);
   }, [product.images]);
+
+  useEffect(() => {
+    if (product.framed_price && !product.unframed_price) {
+      setSelectedType("Framed");
+    } else if (!product.framed_price && product.unframed_price) {
+      setSelectedType("Unframed");
+    }
+  }, [product]);
+
+
+  const handleAddToCart = (quantity: number) => {
+    console.log(quantity);
+  }
 
   return (
     <main className="bg-white">
@@ -138,27 +139,55 @@ const ProductDetails = ({
                 {product.name}
               </h1>
               <div className="flex gap-4 items-center">
-                {product.framed_price && (
-                  <p className="text-lg lg:text-xl font-lato font-bold">
-                    <span className="font-medium text-gray-500">
-                      Framed Price:
-                    </span>{" "}
-                    ${parseFloat(product.framed_price).toLocaleString()}
-                  </p>
-                )}
-                {product.unframed_price && (
-                  <p className="text-lg lg:text-xl font-lato font-bold">
-                    <span className="font-medium text-gray-500">
-                      Unframed Price:
-                    </span>{" "}
-                    ${parseFloat(product.unframed_price).toLocaleString()}
-                  </p>
-                )}
+                <p className="text-lg lg:text-xl font-lato font-bold">
+                  <span className="font-medium text-gray-500">
+                    {selectedType} Price:
+                  </span>{" "}
+                  $
+                  {parseFloat(
+                    selectedType === "Framed"
+                      ? product.framed_price || "0"
+                      : product.unframed_price || "0",
+                  ).toLocaleString()}
+                </p>
               </div>
             </div>
 
             {/* Options Selection */}
             <div className="space-y-8">
+              {/* Frame Selection */}
+              <div className="space-y-3">
+                <p className="font-lato text-base lg:text-lg font-medium uppercase tracking-widest text-[#686868]">
+                  Select Option
+                </p>
+                <div className="flex gap-4">
+                  {product.unframed_price && (
+                    <button
+                      onClick={() => setSelectedType("Unframed")}
+                      className={`px-6 py-3 border rounded-sm transition-all font-lato font-medium ${
+                        selectedType === "Unframed"
+                          ? "border-[#0C2E46] bg-[#0C2E46] text-white"
+                          : "border-gray-200 text-[#141414] hover:border-[#0C2E46]"
+                      }`}
+                    >
+                      Unframed
+                    </button>
+                  )}
+                  {product.framed_price && (
+                    <button
+                      onClick={() => setSelectedType("Framed")}
+                      className={`px-6 py-3 border rounded-sm transition-all font-lato font-medium ${
+                        selectedType === "Framed"
+                          ? "border-[#0C2E46] bg-[#0C2E46] text-white"
+                          : "border-gray-200 text-[#141414] hover:border-[#0C2E46]"
+                      }`}
+                    >
+                      Framed
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-1">
                 <p className="font-lato text-base lg:text-lg font-medium uppercase tracking-widest text-[#686868]">
                   Availability
@@ -256,7 +285,12 @@ const ProductDetails = ({
 
               {product?.stock_quantity > 0 ? (
                 <div className="flex flex-col gap-4 sm:flex-row">
-                  <button className="flex-1 border border-[#0C2E46] py-4 font-lato text-sm md:text-base font-bold tracking-[0.2em] text-[#0C2E46] transition-all hover:bg-gray-50 active:scale-95 uppercase cursor-pointer">
+                  <button
+                    onClick={() =>
+                      handleAddToCart(quantity)
+                    }
+                    className="flex-1 border border-[#0C2E46] py-4 font-lato text-sm md:text-base font-bold tracking-[0.2em] text-[#0C2E46] transition-all hover:bg-gray-50 active:scale-95 uppercase cursor-pointer"
+                  >
                     Add to Bag
                   </button>
                   <button

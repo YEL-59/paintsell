@@ -1,26 +1,28 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, User, ShoppingCart, Menu, X, ChevronDown, LogOut, Phone } from "lucide-react";
+import {
+  Search,
+  User,
+  ShoppingCart,
+  Menu,
+  X,
+  ChevronDown,
+  LogOut,
+  Phone,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import CartSidebar from "@/components/mainLayout/CartSidebar";
 import { getCurrentUser, logout } from "@/services/auth";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
 const Navbar = ({ initialUser }: { initialUser: any }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isPrintsOpen, setIsPrintsOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(initialUser);
@@ -35,7 +37,7 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
     };
     fetchUser();
   }, [pathname, initialUser]);
-  console.log("CURRENT USER", currentUser); 
+  console.log("CURRENT USER", currentUser);
 
   const handleLogout = async () => {
     try {
@@ -204,7 +206,7 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
           {/* Action Icons */}
           <div className="flex items-center space-x-6">
             {/* Search Icon */}
-            <motion.button
+            {/* <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Search"
@@ -212,58 +214,96 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
             >
               <Search className="h-5 w-5" />
               <span className="absolute -bottom-1 left-0 h-px w-0 bg-white transition-all duration-300 group-hover:w-full" />
-            </motion.button>
+            </motion.button> */}
 
             {/* User Dropdown / Login */}
-            {currentUser ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="flex items-center font-lato focus:outline-none"
-                  >
-                    <Avatar className="h-8 w-8 ring-1 ring-white/20 transition-all hover:ring-white/50">
-                      <AvatarImage src={currentUser?.image || currentUser?.avatar || currentUser?.profile_image} alt={currentUser.name} />
-                      <AvatarFallback className="bg-white/10 text-[10px] text-white font-medium">
-                        {currentUser?.first_name?.charAt(0).toUpperCase() || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                  </motion.button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-64 mt-4 border-white/10 font-lato bg-black/70 text-white backdrop-blur-xl rounded-[24px] p-2 shadow-2xl ring-1 ring-white/10">
-                  <DropdownMenuLabel className="px-4 py-4 font-normal">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-12 w-12 ring-2 ring-white/10 shadow-lg">
-                        <AvatarImage src={currentUser?.image || currentUser?.avatar || currentUser?.profile_image} />
-                        <AvatarFallback className="bg-white/10 text-lg text-white font-lato font-medium">
-                          {currentUser?.first_name?.charAt(0).toUpperCase() || "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col space-y-0.5 overflow-hidden">
-                        <p className="md:text-lg text-base font-semibold tracking-tight truncate font-lato">{currentUser?.first_name + " " + currentUser?.last_name || "User"}</p>
-                        <p className="md:text-sm text-xs text-white/50 truncate font-light font-lato">{currentUser?.email}</p>
-                      </div>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/5 mx-2" />
-                  <DropdownMenuItem className="rounded-xl px-4 py-3 text-[14px] font-normal tracking-wide hover:bg-white/10 focus:bg-white/10 focus:text-white cursor-pointer transition-all duration-200 mt-1" asChild>
-                    <Link href="/contact" className="flex items-center">
-                      <Phone className="mr-3 h-4 w-4 text-white/60" />
-                      <span>Contact Center</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-white/5 mx-2 mt-1" />
-                  <DropdownMenuItem 
-                    onClick={handleLogout}
-                    className="rounded-xl px-4 py-3 text-[14px] font-normal tracking-wide text-red-400 hover:bg-red-500/10 hover:text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer transition-all duration-200 mt-1"
-                  >
-                    <LogOut className="mr-3 h-4 w-4" />
-                    <span>Sign Out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
+            {currentUser && currentUser?.email ? (
+              <div
+                className="relative"
+                onMouseEnter={() => setIsUserMenuOpen(true)}
+                onMouseLeave={() => setIsUserMenuOpen(false)}
+              >
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="md:flex hidden items-center font-lato focus:outline-none"
+                >
+                  <Avatar className="h-8 w-8 cursor-pointer ring-1 ring-white/20 transition-all hover:ring-white/50">
+                    <AvatarImage
+                      src={
+                        currentUser?.image ||
+                        currentUser?.avatar ||
+                        currentUser?.profile_image
+                      }
+                      alt={currentUser.name}
+                    />
+                    <AvatarFallback className="bg-white/10 text-[10px] text-white font-medium">
+                      {currentUser?.first_name?.charAt(0).toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </motion.button>
 
-              </DropdownMenu>
+                <AnimatePresence>
+                  {isUserMenuOpen && (
+                    <>
+                      {/* Hover Bridge */}
+                      <div className="absolute top-full right-0 h-4 w-full" />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="absolute right-0 top-[calc(100%+8px)] w-64 overflow-hidden rounded-2xl bg-black/90 p-2 backdrop-blur-xl ring-1 ring-white/10 shadow-2xl"
+                      >
+                        <div className="px-4 py-4 font-normal">
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="h-12 w-12 ring-2 ring-white/10 shadow-lg">
+                              <AvatarImage
+                                src={
+                                  currentUser?.image ||
+                                  currentUser?.avatar ||
+                                  currentUser?.profile_image
+                                }
+                              />
+                              <AvatarFallback className="bg-white/10 text-lg text-white font-lato font-medium">
+                                {currentUser?.first_name
+                                  ?.charAt(0)
+                                  .toUpperCase() || "U"}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col space-y-0.5 overflow-hidden">
+                              <p className="text-lg font-semibold tracking-tight truncate font-lato text-white">
+                                {currentUser?.first_name +
+                                  " " +
+                                  currentUser?.last_name || "User"}
+                              </p>
+                              <p className="text-sm text-white/50 truncate font-light font-lato">
+                                {currentUser?.email}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="h-px bg-white/5 mx-2" />
+                        <Link
+                          href="/contact"
+                          className="flex items-center rounded-xl px-4 py-3 text-base font-lato font-normal tracking-wide text-white hover:bg-white/10 focus:bg-white/10 focus:text-white cursor-pointer transition-all duration-200 mt-1"
+                        >
+                          <Phone className="mr-3 h-4 w-4 text-white/60 text-base font-lato" />
+                          <span>Contact Center</span>
+                        </Link>
+                        <div className="h-px bg-white/5 mx-2 mt-1" />
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center rounded-xl px-4 py-3 text-base font-lato font-normal tracking-wide text-red-400 hover:bg-red-500/10 hover:text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer transition-all duration-200 mt-1"
+                        >
+                          <LogOut className="mr-3 h-4 w-4 font-lato" />
+                          <span>Sign Out</span>
+                        </button>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
             ) : (
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                 <Link
@@ -392,13 +432,13 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
               })}
 
               {/* Mobile Search */}
-              <motion.button
+              {/* <motion.button
                 variants={itemVariants}
                 className="flex w-full items-center space-x-3 rounded-xl px-4 py-3 text-base font-light tracking-wide text-white transition-all duration-300 hover:bg-white/10 hover:text-white sm:hidden"
               >
                 <Search className="h-4 w-4" />
                 <span>Search</span>
-              </motion.button>
+              </motion.button> */}
 
               {/* Mobile User Section */}
               {currentUser ? (
@@ -406,14 +446,25 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
                   <motion.div variants={itemVariants} className="px-4 py-3">
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={currentUser.image || currentUser.avatar || currentUser.profile_image} />
+                        <AvatarImage
+                          src={
+                            currentUser.image ||
+                            currentUser.avatar ||
+                            currentUser.profile_image
+                          }
+                        />
                         <AvatarFallback className="bg-white/10 text-xs font-medium text-white">
-                          {currentUser.name?.charAt(0).toUpperCase() || "U"}
+                          {currentUser.first_name?.charAt(0).toUpperCase() ||
+                            "U"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-white">{currentUser.name}</span>
-                        <span className="text-[10px] text-white/50">{currentUser.email}</span>
+                        <span className="text-base font-medium text-white">
+                          {currentUser.first_name}
+                        </span>
+                        <span className="text-sm text-white/50">
+                          {currentUser.email}
+                        </span>
                       </div>
                     </div>
                   </motion.div>
@@ -449,4 +500,3 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
 };
 
 export default Navbar;
-

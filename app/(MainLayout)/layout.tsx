@@ -6,7 +6,6 @@ import { getCurrentUser } from "@/services/auth";
 export const dynamic = "force-dynamic";
 
 const MainLayout = async ({ children }: { children: React.ReactNode }) => {
-
   const user = await getCurrentUser();
 
   return (
@@ -19,4 +18,3 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
 };
 
 export default MainLayout;
-
