@@ -209,7 +209,7 @@ const ProductDetails = ({
               </div>
             </div>
 
-            {/* Options Selection */}
+            {/* Options Selection  */}
             <div className="space-y-8">
               {/* Frame Selection */}
               <div className="space-y-3">
