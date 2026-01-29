@@ -48,6 +48,39 @@ const ProductDetails = ({
     setActiveTab(activeTab === tab ? null : tab);
   };
 
+  const parseDescription = (html: string) => {
+    const parts = {
+      mainDescription: "",
+      details: [] as { title: string; content: string }[],
+    };
+
+    if (!html) return parts;
+
+    // Helper to remove literal \n strings and actual newline characters
+    const clean = (str: string) => str.replace(/\\n/g, "").replace(/\n/g, "").trim();
+
+    const h2StartMatch = html.match(/<h2/i);
+    if (h2StartMatch && typeof h2StartMatch.index === "number") {
+      parts.mainDescription = clean(html.substring(0, h2StartMatch.index));
+      const pairsContent = html.substring(h2StartMatch.index);
+
+      const h2Regex = /<h2[^>]*>([\s\S]*?)<\/h2>([\s\S]*?)(?=<h2|$)/gi;
+      let match;
+      while ((match = h2Regex.exec(pairsContent)) !== null) {
+        parts.details.push({
+          title: clean(match[1]),
+          content: clean(match[2]),
+        });
+      }
+    } else {
+      parts.mainDescription = clean(html);
+    }
+
+    return parts;
+  };
+
+  const { mainDescription, details } = parseDescription(product.description);
+
   // Autoplay system for main gallery
   useEffect(() => {
     if (!product.images || product.images.length === 0) return;
@@ -389,33 +422,26 @@ const ProductDetails = ({
                   className="overflow-hidden"
                 >
                   <div className="space-y-8 pb-8 pt-4 font-lato text-base leading-relaxed text-[#686868]">
-                    <p>{product.description}</p>
+                    <div
+                      className="description-content"
+                      dangerouslySetInnerHTML={{ __html: mainDescription }}
+                    />
 
                     <ul className="space-y-3">
-                      <li className="flex gap-2">
-                        <span className="font-semibold">• Artwork Size:</span>
-                        <span>
-                          Making It A Perfect Centerpiece For Any Modern
-                          Interior.
-                        </span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span className="font-semibold">• Print Type:</span>
-                        <span>
-                          Giclée Print On Premium 100% Cotton Fine Art Paper,
-                          Cold Press, Natural Texture, 340 Gsm, Acid-Free.
-                        </span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span className="font-semibold">• Production:</span>
-                        <span>
-                          Printed Locally In Toronto, Ontario, And Individually
-                          Signed And Numbered By The Artist.
-                        </span>
-                      </li>
+                      {details.map((detail, idx) => (
+                        <li key={idx} className="flex gap-2">
+                          <span className="font-semibold whitespace-nowrap">
+                            • {detail.title}
+                          </span>
+                          <div
+                            className="detail-content"
+                            dangerouslySetInnerHTML={{ __html: detail.content }}
+                          />
+                        </li>
+                      ))}
                     </ul>
 
-                    <div className="space-y-4 pt-4">
+                    {/* <div className="space-y-4 pt-4">
                       <h4 className="text-lg lg:text-2xl font-semibold text-[#141414]">
                         Framed Option
                       </h4>
@@ -442,7 +468,7 @@ const ProductDetails = ({
                           </span>
                         </li>
                       </ul>
-                    </div>
+                    </div> */}
                   </div>
                 </motion.div>
               )}
