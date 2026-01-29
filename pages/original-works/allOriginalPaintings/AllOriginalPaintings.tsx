@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useOriginalPaintings } from "@/services/hooks/useProducts";
+import Link from "next/link";
 
 const AllOriginalPaintings = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -139,13 +140,13 @@ const AllOriginalPaintings = () => {
                   transition={{ delay: index * 0.1 }}
                   className="group"
                 >
-                  <div className="group cursor-pointer">
+                  <Link href={`/products/${product?.id}`} className="group cursor-pointer">
                     {/* Image Container */}
                     <div className="relative aspect-square overflow-hidden mb-5 bg-[#F9F9F9] lg:h-[460px] md:h-[300px] h-[200px] w-full flex items-center justify-center">
-                      {product.image ? (
+                      {product?.image ? (
                         <Image
-                          src={product.image}
-                          alt={product.product_name}
+                          src={product?.image}
+                          alt={product?.product_name}
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
@@ -163,24 +164,24 @@ const AllOriginalPaintings = () => {
                     <div>
                       <div>
                         <h3 className="text-base lg:text-lg text-[#141414] font-bold font-lato tracking-wide mb-1 flex-1 pr-4">
-                          {product.product_name}
+                          {product?.product_name}
                         </h3>
                          <div className="flex items-center justify-between my-2 gap-4">
                         <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
                           <span className="text-gray-500  font-bold">Frame Price:</span> $
-                          {parseFloat(product.framed_price).toLocaleString()}
+                          {parseFloat(product?.framed_price).toLocaleString()}
                         </p>
                         <p className="text-base lg:text-lg font-medium font-lato text-[#141414]">
                           <span className="text-gray-500  font-bold">Unframe Price:</span>{" "}
-                          ${parseFloat(product.unframed_price).toLocaleString()}
+                          ${parseFloat(product?.unframed_price).toLocaleString()}
                         </p>
                       </div>
                       </div>
                       <p className="text-sm lg:text-base font-lato text-[#686868] line-clamp-2">
-                        {product.short_description || product.description}
+                        {product?.short_description || product?.description}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 </motion.div>
               ))}
             </div>

@@ -13,3 +13,15 @@ export const getAllHomeData = async () => {
         const result = await res.json();
         return result;
 }
+
+// post newslatter
+export const postNewslatter = async (email: string) => {
+    const formData = new FormData();
+    formData.append("email", email);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/landing-page`, {
+            method: "POST",
+            body: formData,
+        })
+        const result = await res.json();
+        return result;
+}

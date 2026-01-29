@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
 import FooterBanner from "@/assets/images/footer-banner.png";
@@ -6,6 +7,9 @@ import {
   InstagramSvg,
   YoutubeSvg,
 } from "@/components/svg/MainLayoutSvg";
+import { useState } from "react";
+import { postNewslatter } from "@/services/home";
+import { toast } from "sonner";
 
 const Footer = () => {
   const footerNav = [
@@ -54,6 +58,38 @@ const Footer = () => {
       href: "/faq",
     },
   ];
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async () => {
+    if (!email) {
+      toast.error("Please enter an email address");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await postNewslatter(email);
+      if (res?.success) {
+        toast.success(res?.message || "Subscribed successfully!");
+        setEmail("");
+      } else {
+        toast.error(res?.message || "Failed to subscribe");
+      }
+    } catch (error) {
+      console.error("Subscription error:", error);
+      toast.error("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <footer className="relative w-full overflow-hidden text-white pt-50 pb-10">
       {/* Background Image */}
@@ -103,11 +139,18 @@ const Footer = () => {
                 <input
                   type="email"
                   placeholder="example@email.com"
-                  className="w-full bg-white/5 border border-white/20 rounded-full px-6 py-3 font-lato text-sm focus:outline-none focus:border-white/40 transition-colors"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                  className="w-full bg-white/5 border border-white/20 rounded-full px-6 py-3 font-lato text-sm focus:outline-none focus:border-white/40 transition-colors disabled:opacity-50"
                 />
               </div>
-              <button className="bg-white text-black font-lato text-sm font-bold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors cursor-pointer">
-                Subscribe
+              <button
+                onClick={handleSubscribe}
+                disabled={loading}
+                className="bg-white text-black font-lato text-sm font-bold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center min-w-[120px]"
+              >
+                {loading ? "Subscribing..." : "Subscribe"}
               </button>
             </div>
             <div className="flex gap-4 mt-2">

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useSmallPrintProducts } from "@/services/hooks/useProducts";
+import Link from "next/link";
 
 export interface ISmallPrintProduct {
   id: number;
@@ -134,8 +135,8 @@ const AllSmallPrints = () => {
           </div>
         ) : products.length > 0 ? (
           <>
-            <div className="grid grid-cols-2 lg:grid-cols-3 lg:gap-x-8 gap-x-4 lg:gap-y-12 gap-y-6">
-              {products.map((product: ISmallPrintProduct, index: number) => (
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-x-8 gap-x-4 lg:gap-y-12 gap-y-6">
+              {products?.map((product: ISmallPrintProduct, index: number) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
@@ -143,9 +144,9 @@ const AllSmallPrints = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.05 }}
                 >
-                  <div className="group cursor-pointer">
+                  <Link href={`/products/${product.id}`} className="group cursor-pointer">
                     {/* Image Container */}
-                    <div className="relative aspect-square overflow-hidden mb-5 bg-[#F9F9F9] lg:h-[395px] md:h-[250px] h-[180px] w-full flex items-center justify-center">
+                    <div className="relative aspect-square overflow-hidden mb-5 bg-[#F9F9F9] lg:h-[250px] md:h-[220px] h-[200px] w-full flex items-center justify-center">
                       {product.image ? (
                         <Image
                           src={product.image}
@@ -165,7 +166,7 @@ const AllSmallPrints = () => {
 
                     {/* Text Content */}
                     <div className="text-center px-2">
-                      <h3 className="text-base md:text-lg lg:text-2xl font-bold font-lato text-[#141414] tracking-wide mb-1 truncate">
+                      <h3 className="text-base md:text-lg lg:text-xl font-bold line-clamp-1 font-lato text-[#141414] tracking-wide mb-1 truncate">
                         {product.product_name}
                       </h3>
                       <div className="flex items-center justify-center gap-4">
@@ -179,7 +180,7 @@ const AllSmallPrints = () => {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </motion.div>
               ))}
             </div>

@@ -22,6 +22,8 @@ import WorkCard from "@/components/mainLayout/WorkCard";
 import { ShareSvg } from "@/components/svg/MainLayoutSvg";
 import { IProductDetails } from "@/app/(MainLayout)/products/[id]/page";
 import { IProduct } from "@/types";
+import { addToCart } from "@/services/cart";
+import { toast } from "sonner";
 
 const ProductDetails = ({
   product,
@@ -69,10 +71,29 @@ const ProductDetails = ({
     }
   }, [product]);
 
+  console.log(selectedType);
 
-  const handleAddToCart = (quantity: number) => {
-    console.log(quantity);
-  }
+  const handleAddToCart = async (quantity: number) => {
+    try {
+      const type = selectedType === "Unframed" ? 2 : 1;
+      console.log("selectedType ==>", selectedType);
+      const res = await addToCart({
+        product_id: product.id,
+        type: type,
+        quantity: quantity,
+      });
+      console.log(res);
+
+      if (res?.success) {
+        toast.success(res?.message || "Product added to bag successfully!");
+        window.dispatchEvent(new Event("cartUpdated"));
+      } else {
+        toast.error(res?.message || "Something went wrong while adding to bag");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    }
+  };
 
   return (
     <main className="bg-white">
@@ -286,9 +307,7 @@ const ProductDetails = ({
               {product?.stock_quantity > 0 ? (
                 <div className="flex flex-col gap-4 sm:flex-row">
                   <button
-                    onClick={() =>
-                      handleAddToCart(quantity)
-                    }
+                    onClick={() => handleAddToCart(quantity)}
                     className="flex-1 border border-[#0C2E46] py-4 font-lato text-sm md:text-base font-bold tracking-[0.2em] text-[#0C2E46] transition-all hover:bg-gray-50 active:scale-95 uppercase cursor-pointer"
                   >
                     Add to Bag
@@ -502,7 +521,7 @@ const ProductDetails = ({
             }}
             className="w-full"
           >
-            {youMayAlsoLike.map((p, idx) => (
+            {youMayAlsoLike?.map((p, idx) => (
               <SwiperSlide key={p.id}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
