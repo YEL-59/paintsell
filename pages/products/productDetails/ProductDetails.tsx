@@ -82,6 +82,8 @@ const ProductDetails = ({
   };
 
   const { mainDescription, details } = parseDescription(product.description);
+  const { mainDescription: framedMain, details: framedDetails } =
+    parseDescription(product.framed_option);
 
   // Autoplay system for main gallery
   useEffect(() => {
@@ -460,34 +462,32 @@ const ProductDetails = ({
                       ))}
                     </ul>
 
-                    {/* <div className="space-y-4 pt-4">
-                      <h4 className="text-lg lg:text-2xl font-semibold text-[#141414]">
-                        Framed Option
-                      </h4>
-                      <ul className="space-y-3 text-[#686868]">
-                        <li className="flex gap-2">
-                          <span className="font-semibold">• Availability:</span>
-                          <span>
-                            Making It A Perfect Centerpiece For Any Modern
-                            Interior.
-                          </span>
-                        </li>
-                        <li className="flex gap-2">
-                          <span className="font-semibold">• Frame:</span>
-                          <span>
-                            Giclée Print On Premium 100% Cotton Fine Art Paper,
-                            Cold Press, Natural Texture, 340 Gsm, Acid-Free.
-                          </span>
-                        </li>
-                        <li className="flex gap-2">
-                          <span className="font-semibold">• Dimensions:</span>
-                          <span>
-                            Printed Locally In Toronto, Ontario, And
-                            Individually Signed And Numbered By The Artist.
-                          </span>
-                        </li>
-                      </ul>
-                    </div> */}
+                    {product.framed_option && (
+                      <div className="space-y-4 pt-4">
+                        <h4 className="text-lg lg:text-2xl font-semibold text-[#141414]">
+                          Framed Option
+                        </h4>
+                        <div
+                          className="description-content"
+                          dangerouslySetInnerHTML={{ __html: framedMain }}
+                        />
+                        <ul className="space-y-3">
+                          {framedDetails.map((detail, idx) => (
+                            <li key={idx} className="flex gap-2">
+                              <span className="font-semibold whitespace-nowrap">
+                                • {detail.title}
+                              </span>
+                              <div
+                                className="detail-content"
+                                dangerouslySetInnerHTML={{
+                                  __html: detail.content,
+                                }}
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
