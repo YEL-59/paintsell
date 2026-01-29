@@ -158,7 +158,7 @@ const ProductDetails = ({
               />
             </motion.div>
 
-            {/* Overview Section */}
+            {/* Overview Section jh*/}
             <div className="space-y-6 mt-24">
               <h3 className="text-2xl lg:text-[32px] text-[#1D1E21] font-semibold">
                 Overview &
@@ -207,7 +207,7 @@ const ProductDetails = ({
               </div>
             </div>
 
-            {/* Options Selection */}
+            {/* Options Selection  */}
             <div className="space-y-8">
               {/* Frame Selection */}
               <div className="space-y-3">
