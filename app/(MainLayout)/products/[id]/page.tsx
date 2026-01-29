@@ -26,6 +26,7 @@ export interface IProductDetails {
   status: string
   images: string[]
   has_framing_options: boolean
+  framed_option: string
   created_at: string
   updated_at: string
 }

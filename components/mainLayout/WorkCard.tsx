@@ -20,14 +20,14 @@ const WorkCard = ({ work }: { work: IProduct }) => {
         <h3 className="text-base text-center md:text-lg lg:text-2xl font-bold font-lato text-[#141414] tracking-wide mb-1">
           {work?.product_name}
         </h3>
-        <div className="flex gap-4 items-center justify-center">
+        <div className="md:flex gap-4 items-center justify-center text-center">
           {work?.framed_price && (
-            <p className="text-lg lg:text-xl font-lato font-bold">
+            <p className="text-sm md:text-base lg:text-xl font-lato font-bold">
               <span className="font-medium text-gray-500">Framed Price:</span> ${parseFloat(work?.framed_price).toLocaleString()}
             </p>
           )}
           {work?.unframed_price && (
-            <p className="text-lg lg:text-xl font-lato font-bold">
+            <p className="text-sm md:text-base lg:text-xl font-lato font-bold">
               <span className="font-medium text-gray-500">Unframed Price:</span> ${parseFloat(work?.unframed_price).toLocaleString()}
             </p>
           )}
