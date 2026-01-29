@@ -20,7 +20,7 @@ import SubBanner from "@/common/subBanner/SubBanner";
 import CommonBannerImg from "@/assets/images/common-banner.png";
 import WorkCard from "@/components/mainLayout/WorkCard";
 import { ShareSvg } from "@/components/svg/MainLayoutSvg";
-import { IProductDetails } from "@/app/(MainLayout)/products/[id]/page";
+import { IProductDetails } from "@/types/productDetails";
 import { IProduct } from "@/types";
 import { addToCart } from "@/services/cart";
 import { toast } from "sonner";
@@ -90,7 +90,7 @@ const ProductDetails = ({
     if (!product.images || product.images.length === 0) return;
 
     const interval = setInterval(() => {
-      setMainImage((current) => {
+      setMainImage((current: string) => {
         const currentIndex = product.images!.indexOf(current);
         const nextIndex = (currentIndex + 1) % product.images!.length;
         return product.images![nextIndex];
@@ -166,7 +166,7 @@ const ProductDetails = ({
                 Overview &
               </h3>
               <div className="grid grid-cols-3 gap-3">
-                {product.images?.map((thumb, idx) => (
+                {product.images?.map((thumb: string, idx: number) => (
                   <button
                     key={idx}
                     onClick={() => setMainImage(thumb)}
