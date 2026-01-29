@@ -19,6 +19,7 @@ import CartSidebar from "@/components/mainLayout/CartSidebar";
 import { getCurrentUser, logout } from "@/services/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import { getAllCart } from "@/services/cart";
 
 const Navbar = ({ initialUser }: { initialUser: any }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -26,8 +27,20 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
   const [isPrintsOpen, setIsPrintsOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(initialUser);
+  const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
   const router = useRouter();
+
+  const fetchCartCount = async () => {
+    try {
+      const res = await getAllCart();
+      if (res?.success) {
+        setCartCount(res.data?.cart?.item_count || 0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch cart count:", error);
+    }
+  };
 
   useEffect(() => {
     // Only fetch if initialUser is null or we navigated
@@ -36,8 +49,15 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
       setCurrentUser(user);
     };
     fetchUser();
+    fetchCartCount();
+
+    const handleCartUpdate = () => {
+      fetchCartCount();
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, [pathname, initialUser]);
-  console.log("CURRENT USER", currentUser);
 
   const handleLogout = async () => {
     try {
@@ -326,6 +346,11 @@ const Navbar = ({ initialUser }: { initialUser: any }) => {
               className="group relative text-white/90 transition-all duration-300 hover:text-white cursor-pointer"
             >
               <ShoppingCart className="h-5 w-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 font-lato -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-[#0C2E46]">
+                  {cartCount}
+                </span>
+              )}
               <span className="absolute -bottom-1 left-0 h-px w-0 bg-white transition-all duration-300 group-hover:w-full" />
             </motion.button>
 

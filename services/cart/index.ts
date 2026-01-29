@@ -1,7 +1,6 @@
 "use server"
 
 import { cookies } from "next/headers";
-import { FieldValues } from "react-hook-form";
 
 // get all cart
 export const getAllCart = async () => {
@@ -18,31 +17,43 @@ export const getAllCart = async () => {
 
 
 // add to cart
-export const addToCart = async (data: FieldValues) => {
-    const token = (await cookies()).get('token')?.value;
-    const formData = new FormData();
-    formData.append("product_id", data?.productId);
-    formData.append("type", data?.type);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/carts/items`, {
-        method: "POST",
-        headers: {
-            ...(token && { Authorization: `Bearer ${token}` })
-        },
-        body: formData
-    })
-    const result = await res.json();
-    return result;
+export const addToCart = async (data: { product_id: string | number; type: string | number; quantity: string | number }) => {
+    try {
+        const token = (await cookies()).get('token')?.value;
+        const formData = new FormData();
+        formData.append("product_id", data?.product_id?.toString());
+        formData.append("type", data?.type?.toString());
+        formData.append("quantity", data?.quantity?.toString());
+        
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/carts/items`, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                ...(token && { Authorization: `Bearer ${token}` })
+            },
+            body: formData
+        })
+        const result = await res.json();
+        return result;
+    } catch (error) {
+        console.error("Error in addToCart:", error);
+        return { success: false, message: "Failed to connect to server" };
+    }
 }
 
 // update cart
-export const updateCart = async (productId: string, quantity: string) => {
+export const updateCart = async (itemId: string, productId: string, quantity: string) => {
     const token = (await cookies()).get('token')?.value;
 
     const formData = new FormData();
+    formData.append("product_id", productId);
     formData.append("quantity", quantity);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/carts/items/${productId}`, {
-        method: "PUT",
+    formData.append("_method", "PUT");
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/carts/items/${itemId}`, {
+        method: "POST",
         headers: {
+            "Accept": "application/json",
             ...(token && { Authorization: `Bearer ${token}` })
         },
         body: formData

@@ -4,8 +4,11 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2, ShoppingBag } from "lucide-react";
 import { addAddress } from "@/services/address";
+import { getAllCart } from "@/services/cart";
+import Image from "next/image";
+import { useEffect } from "react";
 
 interface CheckoutFormData {
   billingFullName: string;
@@ -31,7 +34,45 @@ interface CheckoutFormData {
 const CheckoutPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [cartSubtotal, setCartSubtotal] = useState(0);
+  const [cartLoading, setCartLoading] = useState(true);
+
+  const fetchCartData = async () => {
+    try {
+      setCartLoading(true);
+      const res = await getAllCart();
+      if (res?.success) {
+        const cartData = res.data?.cart;
+        const itemsData = cartData?.items;
+
+        const formattedItems = Array.isArray(itemsData)
+          ? itemsData
+          : itemsData
+            ? Object.values(itemsData)
+            : [];
+
+        setCartItems(formattedItems);
+        setCartSubtotal(cartData?.subtotal || 0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch cart:", error);
+    } finally {
+      setCartLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartData();
+
+    const handleCartUpdate = () => {
+      fetchCartData();
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -63,14 +104,16 @@ const CheckoutPage = () => {
         state: data.billingState,
         city: data.billingCity,
         zip_code: data.billingPostalCode,
-        is_default: isDefault
+        is_default: isDefault,
       };
 
       // Submit Billing Address
       const billingRes = await addAddress(billingAddress);
-      
+
       if (!(billingRes.status === true || billingRes.success === true)) {
-        throw new Error(billingRes.message || "Failed to save billing address.");
+        throw new Error(
+          billingRes.message || "Failed to save billing address.",
+        );
       }
 
       // 2. Prepare and Submit Shipping Address if different
@@ -83,12 +126,14 @@ const CheckoutPage = () => {
           state: data.shippingState,
           city: data.shippingCity,
           zip_code: data.shippingPostalCode,
-          is_default: false // Per user instruction: "if user checked and it should be 'is_default': false"
+          is_default: false, // Per user instruction: "if user checked and it should be 'is_default': false"
         };
-        
+
         const shippingRes = await addAddress(shippingAddress);
         if (!(shippingRes.status === true || shippingRes.success === true)) {
-          throw new Error(shippingRes.message || "Failed to save shipping address.");
+          throw new Error(
+            shippingRes.message || "Failed to save shipping address.",
+          );
         }
       }
 
@@ -178,6 +223,8 @@ const CheckoutPage = () => {
         >
           {/* Left Column - Forms */}
           <div className="lg:col-span-8 space-y-8">
+          
+
             {/* Billing Address */}
             <div className="bg-white p-6 md:p-8 rounded-[16px] border border-[#A3A3A3]">
               <h2 className="text-xl lg:text-2xl font-semibold font-lato text-[#141414] mb-8">
@@ -316,6 +363,63 @@ const CheckoutPage = () => {
 
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-4 space-y-6">
+
+              {/* Order Items */}
+            <div className="bg-white p-6 md:p-8 rounded-[16px] border border-[#A3A3A3]">
+              <div className="flex items-center gap-2 mb-8">
+                <ShoppingBag className="w-6 h-6 text-[#0C2E46]" />
+                <h2 className="text-xl lg:text-2xl font-semibold font-lato text-[#141414]">
+                  Order Items ({cartItems.length})
+                </h2>
+              </div>
+
+              {cartLoading ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="w-8 h-8 animate-spin text-[#0C2E46]" />
+                </div>
+              ) : cartItems.length === 0 ? (
+                <div className="text-center py-8 text-gray-500 font-lato">
+                  Your bag is empty.
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {cartItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex gap-4 pb-6 border-b border-gray-100 last:border-0 last:pb-0"
+                    >
+                      <div className="relative w-20 h-20 shrink-0 bg-gray-50 rounded-sm overflow-hidden">
+                        <Image
+                          src={item.product?.image}
+                          alt={item.product?.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between">
+                          <h3 className="text-base font-lato font-bold text-[#141414] truncate">
+                            {item.product?.name}
+                          </h3>
+                          <span className="text-base font-lato font-bold text-[#141414]">
+                            $
+                            {(item.unit_price * item.quantity).toLocaleString()}
+                          </span>
+                        </div>
+                        <p className="text-sm font-lato text-gray-500 capitalize">
+                          {item.type}
+                        </p>
+                        <p className="text-sm font-lato text-[#0C2E46] font-bold mt-1">
+                          QTY: {item.quantity} × $
+                          {item.unit_price.toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Payment Method */}
             <div className="bg-white p-6 rounded-[16px] border border-[#A3A3A3]">
               <h2 className="text-xl lg:text-2xl font-semibold font-lato text-[#141414] mb-8">
@@ -347,19 +451,23 @@ const CheckoutPage = () => {
               <div className="space-y-4">
                 <div className="flex justify-between text-base font-lato">
                   <span className="text-[#686868]">Subtotal</span>
-                  <span className="font-bold text-[#141414]">$3000</span>
+                  <span className="font-bold text-[#141414]">
+                    ${cartSubtotal.toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between text-base font-lato">
-                  <span className="text-[#686868]">Vat (20%)</span>
-                  <span className="font-bold text-[#141414]">$20</span>
+                  <span className="text-[#686868]">Vat (0%)</span>
+                  <span className="font-bold text-[#141414]">$0</span>
                 </div>
                 <div className="flex justify-between text-base font-lato pb-4 border-b border-gray-100">
                   <span className="text-[#686868]">Delivery Fee</span>
-                  <span className="font-bold text-[#141414]">$15</span>
+                  <span className="font-bold text-[#141414]">$0</span>
                 </div>
                 <div className="flex justify-between text-xl font-lato font-bold pt-2">
                   <span className="text-[#141414]">Total</span>
-                  <span className="text-[#141414]">$3500</span>
+                  <span className="text-[#1414114]">
+                    ${cartSubtotal.toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>
