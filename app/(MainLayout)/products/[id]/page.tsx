@@ -20,7 +20,7 @@ import SubBanner from "@/common/subBanner/SubBanner";
 import CommonBannerImg from "@/assets/images/common-banner.png";
 import WorkCard from "@/components/mainLayout/WorkCard";
 import { ShareSvg } from "@/components/svg/MainLayoutSvg";
-import { IProductDetails } from "@/app/(MainLayout)/products/[id]/page";
+import ProductDetails from "@/pages/products/productDetails/ProductDetails";
 import { IProduct } from "@/types";
 import { addToCart } from "@/services/cart";
 import { toast } from "sonner";
